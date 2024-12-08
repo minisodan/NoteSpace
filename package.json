@@ -1,0 +1,23 @@
+{
+  "name": "notepad",
+  "version": "1.0.0",
+  "description": "notepad app for fun",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minisodan/notepad.git"
+  },
+  "author": "Mason",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/minisodan/notepad/issues"
+  },
+  "homepage": "https://github.com/minisodan/notepad#readme",
+  "devDependencies": {
+    "electron": "^33.2.1"
+  }
+}
