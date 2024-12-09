@@ -1,29 +1,40 @@
-const { app, BrowserWindow, ipcMain} = require('electron')
-const path = require('node:path')
+const { app, BrowserWindow, ipcMain, Menu, MenuItem} = require('electron')
+const fs = require('fs-extra')
+const {build_app} = require('./Ui/Js/script.js')
 
-const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
+app.disableHardwareAcceleration()
 
-  win.loadFile('index.html')
-}
+app.on('ready', () => {
+    window = build_app()
 
-app.whenReady().then(() => {
-  ipcMain.handle('ping', () => 'pong')
-  createWindow()
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
+    window.webContents.openDevTools();
 })
 
+let menu_list = [
+    {
+        label: "File",
+        submenu: [
+            {
+                label: "Open File...",
+                click: function () {
+                    console.log("Open File Clicked");
+                }
+            },
+            {
+                label: "Open recent...",
+                click: function () {
+                    console.log("Open Recent Clicked");
+                }
+            }
+        ]
+    }
+];
+
+const menu_design = Menu.buildFromTemplate(menu_list);
+Menu.setApplicationMenu(menu_design);
+
+
+
 app.on('window-all-closed', () => {
-    app.quit()
-  })
+    app.quit();
+});
