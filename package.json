@@ -19,5 +19,8 @@
   "homepage": "https://github.com/minisodan/notepad#readme",
   "devDependencies": {
     "electron": "^33.2.1"
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0"
   }
 }
