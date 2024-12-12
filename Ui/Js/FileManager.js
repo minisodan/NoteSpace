@@ -59,29 +59,29 @@ class FileManager {
       console.error("App window is not initialized.");
       return;
     }
-  
+
     // Open dialog for selecting files from system
     dialog
       .showOpenDialog(this.app_window, { properties: ["openFile"] })
       .then((res) => {
         // Log the result to verify if filePaths is being populated correctly
         console.log("Dialog result:", res);
-  
+
         // Check if the user selected a file (not canceled)
         if (!res.canceled && res.filePaths.length > 0) {
           const filePath = res.filePaths[0];
           console.log("Selected file:", filePath);
-  
+
           // Read the file content
           fs.readFile(filePath, "utf-8", (err, data) => {
             if (err) {
               console.error("Error reading file:", err);
               return;
             }
-  
+
             // Save file path in history
             this.saveHistory(filePath);
-  
+
             // Send data and path to the renderer process
             this.app_window.webContents.send("filedata", {
               data: data,
@@ -95,7 +95,7 @@ class FileManager {
       .catch((err) => {
         console.error("Error opening file dialog:", err);
       });
-    } 
+  }
 
   openRecentFile(path) {
     fs.readFile(path, "utf-8", (err, data) => {
@@ -107,42 +107,50 @@ class FileManager {
 
   async quit() {
     const response = await dialog.showMessageBox(this.app_window, {
-        type: "warning",
-        buttons: ['Cancel', 'Quit'],
-        defaultId: 1,
-        title: 'Confirm Quit',
-        message: 'Are you aure you want to quit?',
+      type: "warning",
+      buttons: ["Cancel", "Quit"],
+      defaultId: 1,
+      title: "Confirm Quit",
+      message: "Are you aure you want to quit?",
     });
 
-    if(response.response === 1) {
-        this.app.quit();
+    if (response.response === 1) {
+      this.app.quit();
     } else {
-        console.log('Quit operation canceled');
+      console.log("Quit operation canceled");
     }
   }
 
-
   async saveFileWindow(fileContent = "") {
     try {
+      // Ensure file content is not empty
+      if (!fileContent) {
+        console.error("No content to save.");
+        return;
+      }
+
+      // Open a save file dialog
       const result = await dialog.showSaveDialog(this.app_window, {
         title: "Save File",
-        defaultPath: "untitled.txt",  // Default filename
-        filters: [{ name: "Text Files", extensions: ["txt"] }],  // File filter
+        defaultPath: "untitled", // Default filename
+        filters: [{ name: "Text Files", extensions: ["txt"] }], // File filter
       });
 
       if (!result.canceled) {
-        // The user selected a location and gave a name for the file
         const filePath = result.filePath;
+
+        // Debugging: Log filePath and content to be saved
+        console.log("Saving file to:", filePath);
+        console.log("File content:", fileContent);
 
         // Save the content to the selected file path
         await fs.writeFile(filePath, fileContent);
-
         console.log(`File saved to ${filePath}`);
 
-        // Optionally, you can save the file path to the history (if desired)
-        await this.saveHistory(filePath); // Save the path in history
+        // Optionally, save the file path in history
+        await this.saveHistory(filePath);
 
-        // You can also send an event back to the renderer if needed (for updates, etc.)
+        // Send a notification to the renderer process
         this.app_window.webContents.send("file-saved", { path: filePath });
       }
     } catch (error) {
