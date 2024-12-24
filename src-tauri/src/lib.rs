@@ -3,9 +3,7 @@
 /// A simple Tauri command that returns the greeting 'Hi!'
 ///
 /// Function will be invoked via the front end.
-fn say_hi() -> String {
-    "Hi!".to_string()
-}
+fn say_hi() {}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
