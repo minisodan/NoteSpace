@@ -13,7 +13,8 @@
     "windows": [
       {
         "title": "notepad.me",
-        "width": 800
+        "width": 800,
+        "height": 600
       }
     ],
     "security": {
