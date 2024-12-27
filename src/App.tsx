@@ -1,4 +1,4 @@
-import Home from "./Components/Home";
+import Editor from "./Components/Editor";
 
 /**
  * Entry function from main.tsx which will be the main entry point for the differing Components
@@ -6,7 +6,7 @@ import Home from "./Components/Home";
 const App = () => {
   return (
     <div>
-      <Home />
+      <Editor />
     </div>
   );
 };
