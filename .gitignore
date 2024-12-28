@@ -25,3 +25,4 @@ dist-ssr
 
 # Nix dev
 shell.nix
+.direnv/
