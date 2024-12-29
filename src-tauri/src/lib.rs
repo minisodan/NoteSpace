@@ -1,11 +1,10 @@
-use tauri::{WebviewUrl, WebviewWindowBuilder};
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder
         ::default()
-        .setup(|app| {
+        .setup(|_app| {
             #[cfg(target_os="macos")] {
+                use tauri::{WebviewUrl, WebviewWindowBuilder};
                 use tauri::TitleBarStyle;
                 use cocoa::appkit::{ NSColor, NSWindow };
                 use cocoa::base::{ id, nil };
