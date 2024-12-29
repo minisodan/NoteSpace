@@ -14,6 +14,8 @@ pub fn run() {
             // Since linux distros tend to handle decorations, we can disable them for linux.
             #[cfg(target_os = "linux")]
             let win_builder = win_builder.decorations(false);
+            
+            // TODO: set color of window bar on macos based on application color scheme
 
             let _window = win_builder.build().unwrap();
 
