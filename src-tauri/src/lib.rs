@@ -11,6 +11,10 @@ pub fn run() {
                 .title("Notepad.me")
                 .inner_size(800.0, 600.0);
 
+            // Set blank title for macos
+            #[cfg(target_os = "macos")]
+            let win_builder = win_builder.title("");
+
             // Since linux distros tend to handle decorations, we can disable them for linux.
             #[cfg(target_os = "linux")]
             let win_builder = win_builder.decorations(false);
