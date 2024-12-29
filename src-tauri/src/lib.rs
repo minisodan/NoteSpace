@@ -9,7 +9,7 @@ pub fn run() {
                 use cocoa::appkit::{ NSColor, NSWindow };
                 use cocoa::base::{ id, nil };
 
-                let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl:: default())
+                let win_builder = WebviewWindowBuilder::new(_app, "main", WebviewUrl:: default())
                     .title("Transparent Titlebar Window")
                     .inner_size(800.0, 600.0);
 
