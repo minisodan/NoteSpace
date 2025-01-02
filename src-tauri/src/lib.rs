@@ -1,11 +1,10 @@
-use tauri::{WebviewUrl, WebviewWindowBuilder};
+use tauri::{ WebviewUrl, WebviewWindowBuilder };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder
         ::default()
         .setup(|app| {
-
             // Set application window defaults
             let win_builder = WebviewWindowBuilder::new(app, "notepad", WebviewUrl::default())
                 .title("Notepad.me")
@@ -18,7 +17,7 @@ pub fn run() {
             // Since linux distros tend to handle decorations, we can disable them for linux.
             #[cfg(target_os = "linux")]
             let win_builder = win_builder.decorations(false);
-            
+
             // TODO: set color of window bar on macos based on application color scheme
 
             let _window = win_builder.build().unwrap();
