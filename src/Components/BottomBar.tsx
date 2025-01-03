@@ -11,6 +11,9 @@ interface InnerDivProps {
   children: ReactNode;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  onMouseDown: () => void;
+  onMouseUp: () => void;
+  isPressed: boolean;
 }
 
 interface InnerHoverDivProps {
@@ -25,12 +28,23 @@ const OutterDiv = ({ children }: OutterDivProps) => {
   );
 };
 
-const InnerDiv = ({ children, onMouseEnter, onMouseLeave }: InnerDivProps) => {
+const InnerDiv = ({
+  children,
+  onMouseEnter,
+  onMouseLeave,
+  onMouseDown,
+  onMouseUp,
+  isPressed,
+}: InnerDivProps) => {
   return (
     <div
-      className="relative p-1 rounded-md bg-transparent text-white hover:bg-gray-700 hover:text-white cursor-pointer transition duration-300"
+      className={`relative p-1 rounded-md bg-transparent text-white ${
+        isPressed ? "bg-neutral-800" : "hover:bg-neutral-500"
+      } cursor-pointer transition duration-300`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
     >
       {children}
     </div>
@@ -47,11 +61,15 @@ const InnerHoverDiv = ({ children }: InnerHoverDivProps) => {
 
 const BottomBar = () => {
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+  const [pressedButton, setPressedButton] = useState<string | null>(null);
   return (
     <OutterDiv>
       <InnerDiv
         onMouseEnter={() => setHoveredButton("file")}
         onMouseLeave={() => setHoveredButton(null)}
+        onMouseDown={() => setPressedButton("file")}
+        onMouseUp={() => setPressedButton(null)}
+        isPressed={pressedButton === "file"}
       >
         <PiFilePlusDuotone size={18} />
         {hoveredButton === "file" && <InnerHoverDiv>New File</InnerHoverDiv>}
@@ -59,6 +77,9 @@ const BottomBar = () => {
       <InnerDiv
         onMouseEnter={() => setHoveredButton("folder")}
         onMouseLeave={() => setHoveredButton(null)}
+        onMouseDown={() => setPressedButton("folder")}
+        onMouseUp={() => setPressedButton(null)}
+        isPressed={pressedButton === "folder"}
       >
         <PiFolderSimplePlus size={18} />
         {hoveredButton === "folder" && (
@@ -68,6 +89,9 @@ const BottomBar = () => {
       <InnerDiv
         onMouseEnter={() => setHoveredButton("settings")}
         onMouseLeave={() => setHoveredButton(null)}
+        onMouseDown={() => setPressedButton("settings")}
+        onMouseUp={() => setPressedButton(null)}
+        isPressed={pressedButton === "settings"}
       >
         <PiGearLight size={18} />
         {hoveredButton === "settings" && (
