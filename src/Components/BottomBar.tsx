@@ -3,11 +3,11 @@ import { PiFolderSimplePlus } from "react-icons/pi";
 import { PiGearLight } from "react-icons/pi";
 import { ReactNode, useState } from "react";
 
-interface OutterDivProps {
+interface BottomBarContainerProps {
   children: ReactNode;
 }
 
-interface InnerDivProps {
+interface BottomBarButtonProps {
   children: ReactNode;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -16,11 +16,11 @@ interface InnerDivProps {
   isPressed: boolean;
 }
 
-interface InnerHoverDivProps {
+interface BottomBarHoverButtonProps {
   children: string;
 }
 
-const OutterDiv = ({ children }: OutterDivProps) => {
+const BottomBarContainer = ({ children }: BottomBarContainerProps) => {
   return (
     <div className="flex flex-row justify-around m-2 p-2 gap-4 text-white">
       {children}
@@ -28,14 +28,14 @@ const OutterDiv = ({ children }: OutterDivProps) => {
   );
 };
 
-const InnerDiv = ({
+const BottomBarButton = ({
   children,
   onMouseEnter,
   onMouseLeave,
   onMouseDown,
   onMouseUp,
   isPressed,
-}: InnerDivProps) => {
+}: BottomBarButtonProps) => {
   return (
     <div
       className={`relative p-1 rounded-md bg-transparent text-white ${
@@ -51,7 +51,7 @@ const InnerDiv = ({
   );
 };
 
-const InnerHoverDiv = ({ children }: InnerHoverDivProps) => {
+const BottomBarHoverButton = ({ children }: BottomBarHoverButtonProps) => {
   return (
     <div className="absolute bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded-md whitespace-nowrap">
       {children}
@@ -63,8 +63,8 @@ const BottomBar = () => {
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
   return (
-    <OutterDiv>
-      <InnerDiv
+    <BottomBarContainer>
+      <BottomBarButton
         onMouseEnter={() => setHoveredButton("file")}
         onMouseLeave={() => setHoveredButton(null)}
         onMouseDown={() => setPressedButton("file")}
@@ -72,9 +72,11 @@ const BottomBar = () => {
         isPressed={pressedButton === "file"}
       >
         <PiFilePlusDuotone size={18} />
-        {hoveredButton === "file" && <InnerHoverDiv>New File</InnerHoverDiv>}
-      </InnerDiv>
-      <InnerDiv
+        {hoveredButton === "file" && (
+          <BottomBarHoverButton>New File</BottomBarHoverButton>
+        )}
+      </BottomBarButton>
+      <BottomBarButton
         onMouseEnter={() => setHoveredButton("folder")}
         onMouseLeave={() => setHoveredButton(null)}
         onMouseDown={() => setPressedButton("folder")}
@@ -83,10 +85,10 @@ const BottomBar = () => {
       >
         <PiFolderSimplePlus size={18} />
         {hoveredButton === "folder" && (
-          <InnerHoverDiv>New Folder</InnerHoverDiv>
+          <BottomBarHoverButton>New Folder</BottomBarHoverButton>
         )}
-      </InnerDiv>
-      <InnerDiv
+      </BottomBarButton>
+      <BottomBarButton
         onMouseEnter={() => setHoveredButton("settings")}
         onMouseLeave={() => setHoveredButton(null)}
         onMouseDown={() => setPressedButton("settings")}
@@ -95,10 +97,10 @@ const BottomBar = () => {
       >
         <PiGearLight size={18} />
         {hoveredButton === "settings" && (
-          <InnerHoverDiv>Settings</InnerHoverDiv>
+          <BottomBarHoverButton>Settings</BottomBarHoverButton>
         )}
-      </InnerDiv>
-    </OutterDiv>
+      </BottomBarButton>
+    </BottomBarContainer>
   );
 };
 
