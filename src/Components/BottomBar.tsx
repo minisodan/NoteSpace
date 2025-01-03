@@ -22,7 +22,7 @@ interface BottomBarHoverButtonProps {
 
 const BottomBarContainer = ({ children }: BottomBarContainerProps) => {
   return (
-    <div className="flex flex-row justify-around m-2 p-2 gap-4 text-white">
+    <div className="flex flex-row justify-around m-2 p-2 gap-4 text-white select-none">
       {children}
     </div>
   );
@@ -40,7 +40,7 @@ const BottomBarButton = ({
     <div
       className={`relative p-1 rounded-md bg-transparent text-white ${
         isPressed ? "bg-neutral-800" : "hover:bg-neutral-500"
-      } cursor-pointer transition duration-300`}
+      } cursor-pointer transition duration-150`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onMouseDown={onMouseDown}
@@ -53,7 +53,7 @@ const BottomBarButton = ({
 
 const BottomBarHoverButton = ({ children }: BottomBarHoverButtonProps) => {
   return (
-    <div className="absolute bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded-md whitespace-nowrap">
+    <div className="absolute bottom-full mb-2 px-2 py-1 bg-neutral-700 text-neutral-300 text-sm rounded-md whitespace-nowrap">
       {children}
     </div>
   );
