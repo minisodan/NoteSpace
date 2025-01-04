@@ -2,32 +2,35 @@ use std::io::Write;
 use std::fs::File;
 use std::path::Path;
 
-use tauri::{WebviewUrl, WebviewWindowBuilder};
+use tauri::{ WebviewUrl, WebviewWindowBuilder };
 
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
 #[tauri::command]
 fn save_file(content: String, path: String) -> Result<(), String> {
-    
     let path = Path::new(&path);
 
     // check whether the file already exists, if it doesn't, create a file.
     let mut file = if !path.exists() {
         match File::create(path) {
             Ok(file) => file,
-            Err(_) => return Err(String::from("File could not be created."))
+            Err(_) => {
+                return Err(String::from("File could not be created."));
+            }
         }
     } else {
         match File::open(path) {
             Ok(file) => file,
-            Err(_) => return Err(String::from("File could not be opened."))
+            Err(_) => {
+                return Err(String::from("File could not be opened."));
+            }
         }
     };
 
     // now use file, or return error if it can't be used.
     match file.write_all(content.as_bytes()) {
         Ok(_) => Ok(()),
-        Err(_) => Err(String::from("Could not write to file."))
+        Err(_) => Err(String::from("Could not write to file.")),
     }
 }
 
@@ -36,7 +39,6 @@ pub fn run() {
     tauri::Builder
         ::default()
         .setup(|app| {
-
             // Set application window defaults
             let win_builder = WebviewWindowBuilder::new(app, "notepad", WebviewUrl::default())
                 .title("Notepad.me")
