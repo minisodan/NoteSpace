@@ -2,7 +2,9 @@ use std::io::Write;
 use std::fs::File;
 use std::path::Path;
 
-use tauri::{ WebviewUrl, WebviewWindowBuilder };
+use tauri::Manager;
+use tauri_plugin_decorum::WebviewWindowExt;
+
 
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
@@ -38,26 +40,29 @@ fn create_file(path: String) -> Result<(), String> {
 pub fn run() {
     tauri::Builder
         ::default()
-        .setup(|app| {
-            // Set application window defaults
-            let win_builder = WebviewWindowBuilder::new(app, "notepad", WebviewUrl::default())
-                .title("Notepad.me")
-                .inner_size(800.0, 600.0);
+        .plugin(tauri_plugin_decorum::init()) // initialize the decorum plugin
+		.setup(|app| {
+			// Create a custom titlebar for main window
+			// On Windows this hides decoration and creates custom window controls
+			// On macOS it needs hiddenTitle: true and titleBarStyle: overlay
+			let main_window = app.get_webview_window("notepadme").unwrap();
+			main_window.create_overlay_titlebar().unwrap();
 
-            // Set blank title for macos
-            #[cfg(target_os = "macos")]
-            let win_builder = win_builder.title("");
+			// Some macOS-specific helpers
+			#[cfg(target_os = "macos")] {
+				// Set a custom inset to the traffic lights
+				main_window.set_traffic_lights_inset(12.0, 16.0).unwrap();
 
-            // Since linux distros tend to handle decorations, we can disable them for linux.
-            #[cfg(target_os = "linux")]
-            let win_builder = win_builder.decorations(false);
+				// Make window transparent without privateApi
+				main_window.make_transparent().unwrap();
 
-            // TODO: set color of window bar on macos based on application color scheme
+				// Set window level
+				// NSWindowLevel: https://developer.apple.com/documentation/appkit/nswindowlevel
+				main_window.set_window_level(25).unwrap()
+			}
 
-            let _window = win_builder.build().unwrap();
-
-            Ok(())
-        })
+			Ok(())
+		})
         .invoke_handler(tauri::generate_handler![save_file, create_file])
         .plugin(tauri_plugin_opener::init())
         .run(tauri::generate_context!())
