@@ -1,5 +1,5 @@
-use std::io::Write;
 use std::fs::File;
+use std::io::Write;
 use std::path::Path;
 
 use tauri::{ WebviewUrl, WebviewWindowBuilder };
@@ -34,10 +34,17 @@ fn save_file(content: String, path: String) -> Result<(), String> {
     }
 }
 
+/// Delegates to save_file but passes in a empty string.
+#[tauri::command]
+fn create_file(path: String) -> Result<(), String> {
+    save_file(String::from(""), path)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder
         ::default()
+        .plugin(tauri_plugin_fs::init())
         .setup(|app| {
             // Set application window defaults
             let win_builder = WebviewWindowBuilder::new(app, "notepad", WebviewUrl::default())
@@ -58,7 +65,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![save_file])
+        .invoke_handler(tauri::generate_handler![save_file, create_file])
         .plugin(tauri_plugin_opener::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
