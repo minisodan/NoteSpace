@@ -10,20 +10,14 @@ use tauri::{ WebviewUrl, WebviewWindowBuilder };
 fn save_file(content: String, path: String) -> Result<(), String> {
     let path = Path::new(&path);
 
-    // check whether the file already exists, if it doesn't, create a file.
-    let mut file = if !path.exists() {
-        match File::create(path) {
-            Ok(file) => file,
-            Err(_) => {
-                return Err(String::from("File could not be created."));
-            }
-        }
-    } else {
-        match File::open(path) {
-            Ok(file) => file,
-            Err(_) => {
-                return Err(String::from("File could not be opened."));
-            }
+    // decide which file operation to perform.
+    let file_operation = if path.exists() { File::open(path) } else { File::create(path) };
+
+    // unwrap the result of the file operation
+    let mut file = match file_operation {
+        Ok(file) => file,
+        Err(err) => {
+            return Err(String::from(err.to_string()));
         }
     };
 
@@ -32,6 +26,12 @@ fn save_file(content: String, path: String) -> Result<(), String> {
         Ok(_) => Ok(()),
         Err(_) => Err(String::from("Could not write to file.")),
     }
+}
+
+/// Creates a new file by deletgain
+#[tauri::command]
+fn create_file(path: String) -> Result<(), String> {
+    save_file(String::from(""), path)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -58,7 +58,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![save_file])
+        .invoke_handler(tauri::generate_handler![save_file, create_file])
         .plugin(tauri_plugin_opener::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

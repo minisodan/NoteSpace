@@ -7,3 +7,6 @@ export const SaveFile = ({
   content: string;
   path: string;
 }) => invoke("save_file", { content: content, path: path });
+
+export const CreateFile = ({ path }: { path: string }) =>
+  invoke("create_file", { path: path });
