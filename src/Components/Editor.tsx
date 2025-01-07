@@ -12,7 +12,7 @@ const Editor = () => {
       <textarea
         className={`w-full text-neutral-300 resize-none outline-none bg-stone-900 
         scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
-        scrollbar-thumb-neutral-500 scrollbar-track-stone-900 hover:scrollbar-thumb-neutral-400 ${
+        scrollbar-thumb-neutral-500 scrollbar-track-stone-900 hover:scrollbar-thumb-neutral-400 mx-2 ${
           isMac ? "p-2" : "p-4"
         }`}
       />
