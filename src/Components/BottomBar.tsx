@@ -14,6 +14,7 @@ interface BottomBarButtonProps {
   onMouseDown: () => void;
   onMouseUp: () => void;
   isPressed: boolean;
+  onClick: () => void;
 }
 
 interface BottomBarHoverButtonProps {
@@ -35,6 +36,7 @@ const BottomBarButton = ({
   onMouseDown,
   onMouseUp,
   isPressed,
+  onClick,
 }: BottomBarButtonProps) => {
   return (
     <div
@@ -45,6 +47,7 @@ const BottomBarButton = ({
       onMouseLeave={onMouseLeave}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
+      onClick={onClick}
     >
       {children}
     </div>
@@ -59,7 +62,7 @@ const BottomBarHoverButton = ({ children }: BottomBarHoverButtonProps) => {
   );
 };
 
-const BottomBar = () => {
+const BottomBar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
   return (
@@ -70,6 +73,7 @@ const BottomBar = () => {
         onMouseDown={() => setPressedButton("file")}
         onMouseUp={() => setPressedButton(null)}
         isPressed={pressedButton === "file"}
+        onClick={() => ""}
       >
         <PiFilePlusDuotone size={18} />
         {hoveredButton === "file" && (
@@ -82,6 +86,7 @@ const BottomBar = () => {
         onMouseDown={() => setPressedButton("folder")}
         onMouseUp={() => setPressedButton(null)}
         isPressed={pressedButton === "folder"}
+        onClick={() => ""}
       >
         <PiFolderSimplePlus size={18} />
         {hoveredButton === "folder" && (
@@ -94,6 +99,7 @@ const BottomBar = () => {
         onMouseDown={() => setPressedButton("settings")}
         onMouseUp={() => setPressedButton(null)}
         isPressed={pressedButton === "settings"}
+        onClick={() => navigate("/settings")}
       >
         <PiGearLight size={18} />
         {hoveredButton === "settings" && (
