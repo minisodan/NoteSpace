@@ -1,5 +1,5 @@
+use std::fs::{ self, File };
 use std::io::Write;
-use std::fs::File;
 use std::path::Path;
 
 use tauri::{ WebviewUrl, WebviewWindowBuilder };
@@ -28,16 +28,32 @@ fn save_file(content: String, path: String) -> Result<(), String> {
     }
 }
 
-/// Creates a new file by deletgain
+/// Creates a new file by delegating to save_file by passing in a empty string for path.
 #[tauri::command]
 fn create_file(path: String) -> Result<(), String> {
     save_file(String::from(""), path)
+}
+
+/// Creates a new directory based on the specified path.
+#[tauri::command]
+fn create_directory(path: String) -> Result<(), String> {
+    let full_path = Path::new(&path);
+
+    if full_path.exists() {
+        return Err(format!("Directory '{}' already exists.", path));
+    }
+
+    match fs::create_dir_all(&full_path) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(format!("Failed to create directory '{}': {}", path, err)),
+    }
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder
         ::default()
+        .plugin(tauri_plugin_fs::init())
         .setup(|app| {
             // Set application window defaults
             let win_builder = WebviewWindowBuilder::new(app, "notepad", WebviewUrl::default())
@@ -58,7 +74,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![save_file, create_file])
+        .invoke_handler(tauri::generate_handler![save_file, create_file, create_directory])
         .plugin(tauri_plugin_opener::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
