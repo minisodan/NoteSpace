@@ -12,7 +12,14 @@
   "app": {
     "security": {
       "csp": null
-    }
+    },
+    "windows": [
+      {
+        "width": 800,
+        "height": 600,
+        "title": "Notepad.me"
+      }
+    ]
   },
   "bundle": {
     "active": true,
