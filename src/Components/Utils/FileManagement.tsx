@@ -14,9 +14,10 @@ export const CreateFile = ({ path }: { path: string }) =>
   invoke("create_file", { path: path });
 
 export const CreateDirectory = async ({ name }: { name: string }) => {
-  // grabs the users base directory, this will need to change at somepoint.
+  // Grab the user's base directory; this will need to change at some point.
   const baseDir = await homeDir();
-  const fullPath = await join(baseDir, name);
+  const hiddenBase = await join(baseDir, ".notepad");
+  const fullPath = await join(hiddenBase, name);
 
-  return invoke("create_directory", { path: fullPath });
+  return invoke("create_directory", { path: fullPath }); // Ensure `name` matches the expected parameter type
 };
