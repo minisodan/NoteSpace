@@ -2,8 +2,6 @@ use std::fs::{ self, File };
 use std::io::Write;
 use std::path::Path;
 
-use tauri::{ WebviewUrl, WebviewWindowBuilder };
-
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
 #[tauri::command]
@@ -54,28 +52,8 @@ pub fn run() {
     tauri::Builder
         ::default()
         .plugin(tauri_plugin_fs::init())
-        .setup(|app| {
-            // Set application window defaults
-            let win_builder = WebviewWindowBuilder::new(app, "notepad", WebviewUrl::default())
-                .title("Notepad.me")
-                .inner_size(800.0, 600.0);
-
-            // Set blank title for macos
-            #[cfg(target_os = "macos")]
-            let win_builder = win_builder.title("");
-
-            // Since linux distros tend to handle decorations, we can disable them for linux.
-            #[cfg(target_os = "linux")]
-            let win_builder = win_builder.decorations(false);
-
-            // TODO: set color of window bar on macos based on application color scheme
-
-            let _window = win_builder.build().unwrap();
-
-            Ok(())
-        })
-        .invoke_handler(tauri::generate_handler![save_file, create_file, create_directory])
         .plugin(tauri_plugin_opener::init())
+        .invoke_handler(tauri::generate_handler![save_file, create_file, create_directory])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
