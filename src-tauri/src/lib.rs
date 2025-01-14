@@ -2,8 +2,6 @@ use std::fs::{ self, File };
 use std::io::Write;
 use std::path::Path;
 
-use tauri::{ WebviewUrl, WebviewWindowBuilder };
-
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
 #[tauri::command]
