@@ -1,6 +1,7 @@
 use std::fs::{ self, File };
 use std::io::Write;
 use std::path::Path;
+use std::io;
 
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
@@ -47,13 +48,23 @@ fn create_directory(path: String) -> Result<(), String> {
     }
 }
 
+#[tauri::command]
+fn list_files(path: String) -> Vec<String> {
+    fs::read_dir(path)
+        .unwrap()
+        .map(|res| res.map(|e| e.path().into_os_string().into_string().unwrap()).unwrap())
+        .collect::<Vec<String>>()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder
         ::default()
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![save_file, create_file, create_directory])
+        .invoke_handler(
+            tauri::generate_handler![save_file, create_file, create_directory, list_files]
+        )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
