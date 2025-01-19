@@ -1,9 +1,8 @@
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
-import { platform } from '@tauri-apps/plugin-os';
+import { platform } from "@tauri-apps/plugin-os";
 
 const Editor = () => {
-  // Detect the platform using navigator.userAgent
   const navigate = useNavigate();
 
   return (
