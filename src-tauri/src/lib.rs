@@ -1,4 +1,5 @@
-use std::fs::{ self, File };
+use std::fs::{self, File};
+use std::io;
 use std::io::Write;
 use std::path::Path;
 
@@ -9,7 +10,11 @@ fn save_file(content: String, path: String) -> Result<(), String> {
     let path = Path::new(&path);
 
     // decide which file operation to perform.
-    let file_operation = if path.exists() { File::open(path) } else { File::create(path) };
+    let file_operation = if path.exists() {
+        File::open(path)
+    } else {
+        File::create(path)
+    };
 
     // unwrap the result of the file operation
     let mut file = match file_operation {
