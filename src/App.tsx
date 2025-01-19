@@ -4,7 +4,7 @@ import Settings from "./Components/Settings";
 import { CreateApplicationDirectory } from "./Components/Utils/FileManagement";
 
 // ON START
-CreateApplicationDirectory()
+CreateApplicationDirectory();
 
 const App = () => (
   <Router>

@@ -10,6 +10,5 @@
     "opener:default",
     "fs:default",
     "fs:read-all",
-    "os:default"
-  ]
+    "os:default",
 }
