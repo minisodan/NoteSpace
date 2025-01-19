@@ -3,11 +3,13 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": [
-    "notespace"
+    "main"
   ],
   "permissions": [
     "core:default",
     "opener:default",
-    "fs:default"
+    "fs:default",
+    "fs:read-all",
+    "os:default"
   ]
 }
