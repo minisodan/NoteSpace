@@ -1,7 +1,7 @@
-use std::fs::{ self, File };
+use std::fs::{self, File};
+use std::io;
 use std::io::Write;
 use std::path::Path;
-use std::io;
 
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
@@ -10,7 +10,11 @@ fn save_file(content: String, path: String) -> Result<(), String> {
     let path = Path::new(&path);
 
     // decide which file operation to perform.
-    let file_operation = if path.exists() { File::open(path) } else { File::create(path) };
+    let file_operation = if path.exists() {
+        File::open(path)
+    } else {
+        File::create(path)
+    };
 
     // unwrap the result of the file operation
     let mut file = match file_operation {
@@ -52,19 +56,25 @@ fn create_directory(path: String) -> Result<(), String> {
 fn list_files(path: String) -> Vec<String> {
     fs::read_dir(path)
         .unwrap()
-        .map(|res| res.map(|e| e.path().into_os_string().into_string().unwrap()).unwrap())
+        .map(|res| {
+            res.map(|e| e.path().into_os_string().into_string().unwrap())
+                .unwrap()
+        })
         .collect::<Vec<String>>()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder
-        ::default()
+    tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(
-            tauri::generate_handler![save_file, create_file, create_directory, list_files]
-        )
+        .invoke_handler(tauri::generate_handler![
+            save_file,
+            create_file,
+            create_directory,
+            list_files
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

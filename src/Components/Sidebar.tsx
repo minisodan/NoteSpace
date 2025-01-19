@@ -1,6 +1,6 @@
 import BottomBar from "./BottomBar";
 import Directories from "./Directories";
-import { FetchDirectories } from "./Utils/FileManagement";
+import { FetchDirectories, StripFileNameFromPath } from "./Utils/FileManagement";
 import { useEffect, useState } from "react";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
