@@ -7,8 +7,8 @@ const Directories = ({ directories }: { directories: string[] }) => {
       <div className="">
         {directories.length > 0 && (
           <div className="flex flex-col m-2 gap-1">
-            {directories.map(dir => (
-              <Button>
+            {directories.map((dir, i) => (
+              <Button key={i}>
                 <div className="text-left px-2">{StripFileNameFromPath({path: dir})}</div>
               </Button>
             ))}

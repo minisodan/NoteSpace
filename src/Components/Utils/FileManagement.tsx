@@ -13,8 +13,11 @@ export const SaveFile = ({
   path: string;
 }) => invoke("save_file", { content: content, path: path });
 
-export const CreateFile = ({ path }: { path: string }) =>
-  invoke("create_file", { path: path });
+export const CreateFile = async ({ path }: { path: string }) => {
+  const fullPath = await join(await GetApplicationPath(), path);
+
+  return invoke("create_file", { path: fullPath });
+}
 
 export const CreateDirectory = async ({ path }: { path: string }) => {
   const fullPath = await join(await GetApplicationPath(), path);
@@ -25,7 +28,7 @@ export const CreateDirectory = async ({ path }: { path: string }) => {
 export const CreateApplicationDirectory = async () => 
   invoke("create_directory", {path: await GetApplicationPath()})
 
-export const FetchDirectories = async () => {
+export const FetchFiles = async () => {
   const baseDir = await homeDir();
   const hiddenBase = await join(baseDir, ".notespace/");
 
