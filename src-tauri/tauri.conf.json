@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "notepad.me",
+  "productName": "notespace",
   "version": "0.1.0",
-  "identifier": "com.notepadme.app",
+  "identifier": "com.notespace.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,14 @@
   "app": {
     "security": {
       "csp": null
-    }
+    },
+    "windows": [
+      {
+        "width": 800,
+        "height": 600,
+        "title": "Notespace"
+      }
+    ]
   },
   "bundle": {
     "active": true,
