@@ -2,12 +2,12 @@ import { useState } from "react"
 import { Input, InputProps } from "./Input"
 
 /**
- * An input box that destroys itself then reports it's value on focus loss. 
- * @param onComplete hook that reports value when destroyed
+ * An input component that, on focus loss, reports it's value and becomes inaccessible.
+ * @param onComplete hook that reports value on focus loss
  * @returns input element
  */
 export const FocusInput = ({
-  onComplete = (input: string) => {}, 
+  onComplete = () => {}, 
   ...props
 }: {
   onComplete?: (input: string) => void

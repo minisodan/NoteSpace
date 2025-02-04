@@ -1,7 +1,7 @@
 import BottomBar from "./BottomBar";
 import Directories from "./Directories";
-import { DIRECTORY, FILE, FileCreation, FileCreationMode } from "./FileCreation";
-import { FetchFiles } from "./Utils/FileManagement";
+import { FILE_CREATION_MODE, FileCreation, FileCreationMode } from "./FileCreation";
+import { FetchAllFilesAndDirectories } from "./Utils/FileManagement";
 import { useState } from "react";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
@@ -16,7 +16,7 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   }
 
   const fetchedData = async () => {
-    const fetchedDirectories = await FetchFiles();
+    const fetchedDirectories = await FetchAllFilesAndDirectories();
     setDirectories(fetchedDirectories);
   }
 
@@ -29,7 +29,7 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
           {fileCreationMode && 
             <FileCreation 
               key={fileCreationKey} 
-              mode={fileCreationMode ?? FILE}
+              fileCreationMode={fileCreationMode ?? FILE_CREATION_MODE.FILE}
               onComplete={fetchedData}
             />
           }
@@ -40,8 +40,8 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
         <div className="mt-auto">
           <BottomBar 
             navigate={navigate} 
-            onFileClick={() => updateFileCreation(FILE)}
-            onFolderClick={() => updateFileCreation(DIRECTORY)} 
+            onFileClick={() => updateFileCreation(FILE_CREATION_MODE.FILE)}
+            onFolderClick={() => updateFileCreation(FILE_CREATION_MODE.DIRECTORY)} 
           />
         </div>
       </div>
