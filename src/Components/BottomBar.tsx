@@ -6,7 +6,15 @@ import {
 import { useState } from "react";
 import { Button } from "./Widgets/Button";
 
-const BottomBar = ({ navigate }: { navigate: (path: string) => void }) => {
+const BottomBar = ({ 
+  navigate, 
+  onFileClick, 
+  onFolderClick 
+}: { 
+  navigate: (path: string) => void
+  onFileClick:  () => void
+  onFolderClick: () => void
+}) => {
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
   const renderHoverLabel = (label: string, id: string) => (
@@ -24,20 +32,20 @@ const BottomBar = ({ navigate }: { navigate: (path: string) => void }) => {
       id: "file",
       icon: <PiFilePlusDuotone size={18} />,
       label: "New File",
-      onClick: () => {},
+      onClick: onFileClick,
     },
     {
       id: "folder",
       icon: <PiFolderSimplePlus size={18} />,
       label: "New Folder",
-      onClick: () => {},
+      onClick: onFolderClick,
     },
     {
       id: "settings",
       icon: <PiGearLight size={18} />,
       label: "Settings",
       onClick: () => navigate("/settings"),
-    },
+    }
   ];
 
   return (
