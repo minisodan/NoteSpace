@@ -48,6 +48,22 @@ fn create_directory(path: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn read_file(path: String) -> Result<String, String> {
+    let file_path = Path::new(&path);
+
+    if !file_path.exists() {
+        return Err(format!("file '{}' does not exist.", path));
+    }
+
+    let content = fs::read_to_string(file_path);
+
+    match content {
+        Ok(content) => Ok(content),
+        Err(err) => Err(format!("Failed to fetch file contents from path '{}': {}", path, err)),
+    }
+}
+
+#[tauri::command]
 fn list_files(path: String) -> Vec<String> {
     fs::read_dir(path)
         .unwrap()
@@ -63,7 +79,13 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(
-            tauri::generate_handler![save_file, create_file, create_directory, list_files]
+            tauri::generate_handler![
+                save_file,
+                create_file,
+                create_directory,
+                list_files,
+                read_file
+            ]
         )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
