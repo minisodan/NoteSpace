@@ -29,6 +29,10 @@ export const CreateDirectory = async ({ path }: { path: string }) => {
 export const CreateApplicationDirectory = async () =>
   invoke("create_directory", { path: await GetApplicationPath() });
 
+export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
+  return invoke("delete_file", { path: path });
+}
+
 export const FetchAllFilesAndDirectories = async () => {
   const baseDir = await homeDir();
   const hiddenBase = await join(baseDir, ".notespace/");

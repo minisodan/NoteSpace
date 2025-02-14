@@ -47,6 +47,25 @@ fn create_directory(path: String) -> Result<(), String> {
     }
 }
 
+// deletes a file with the specified path
+#[tauri::command]
+fn delete_file(path: String) -> Result<(), String> {
+
+    let full_path = Path::new(&path);
+
+    if full_path.is_file() {
+        match fs::remove_file(path) {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err.to_string())
+        }
+    } else {
+        match fs::remove_dir(path) {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err.to_string())
+        }
+    }
+}
+
 #[tauri::command]
 fn read_file(path: String) -> Result<String, String> {
     let file_path = Path::new(&path);
@@ -85,6 +104,7 @@ pub fn run() {
                 create_directory,
                 list_files,
                 read_file
+                delete_file
             ]
         )
         .run(tauri::generate_context!())
