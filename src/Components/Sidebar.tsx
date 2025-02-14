@@ -1,14 +1,17 @@
 import BottomBar from "./BottomBar";
 import Directories from "./Directories";
 import { FILE_CREATION_MODE, FileCreation, FileCreationMode } from "./FileCreation";
-import { FetchAllFilesAndDirectories } from "./Utils/FileManagement";
+import { DeleteFileByFullPath, FetchAllFilesAndDirectories, StripFileNameFromPath } from "./Utils/FileManagement";
 import { useState } from "react";
+import { ConfirmationPopup } from "./Widgets/ConfirmationPopup";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [directories, setDirectories] = useState<any[]>([]);
 
   const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined)
   const [fileCreationKey, setFileCreationKey] = useState<number>(0)
+
+  const [deletePath, setDeletePath] = useState<string | undefined>(undefined) 
 
   const updateFileCreation = (mode: FileCreationMode) => {
     setFileCreationKey(fileCreationKey + 1)
@@ -34,8 +37,19 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
             />
           }
         </div>
+        {deletePath && 
+          <ConfirmationPopup 
+            bodyText={`Are you sure you want to delete '${StripFileNameFromPath({path: deletePath ?? ""})}'?`}
+            onCancel={() => setDeletePath(undefined)}
+            onConfirm={() => {
+              DeleteFileByFullPath({path: deletePath})
+              fetchedData()
+              setDeletePath(undefined)
+            }}>
+          </ConfirmationPopup>
+        }
         <div className="flex-grow overflow-y-auto">
-          <Directories directories={directories} />
+          <Directories directories={directories} onDelete={(path) => {setDeletePath(path)}}/>
         </div>
         <div className="mt-auto">
           <BottomBar 
