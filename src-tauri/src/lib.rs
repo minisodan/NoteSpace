@@ -47,6 +47,25 @@ fn create_directory(path: String) -> Result<(), String> {
     }
 }
 
+// deletes a file with the specified path
+#[tauri::command]
+fn delete_file(path: String) -> Result<(), String> {
+
+    let full_path = Path::new(&path);
+
+    if full_path.is_file() {
+        match fs::remove_file(path) {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err.to_string())
+        }
+    } else {
+        match fs::remove_dir(path) {
+            Ok(_) => Ok(()),
+            Err(err) => Err(err.to_string())
+        }
+    }
+}
+
 #[tauri::command]
 fn list_files(path: String) -> Vec<String> {
     fs::read_dir(path)
@@ -63,7 +82,13 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(
-            tauri::generate_handler![save_file, create_file, create_directory, list_files]
+            tauri::generate_handler![
+                save_file, 
+                create_file, 
+                create_directory, 
+                list_files,
+                delete_file
+            ]
         )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
