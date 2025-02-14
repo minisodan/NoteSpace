@@ -33,12 +33,7 @@ export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
   return invoke("delete_file", { path: path });
 }
 
-export const FetchAllFilesAndDirectories = async () => {
-  const baseDir = await homeDir();
-  const hiddenBase = await join(baseDir, ".notespace/");
-
-  return invoke("list_files", { path: hiddenBase }) as Promise<string[]>;
-};
+export const FetchAllFilesAndDirectories = async () => invoke("list_files", { path: await GetApplicationPath() }) as Promise<string[]>;
 
 /**
  * Reads and returns the entire contents of a file.
@@ -46,7 +41,7 @@ export const FetchAllFilesAndDirectories = async () => {
  * @param path path to the file.
  * @returns file contents.
  */
-export const ReadTextFile = async ({ path }: { path: string }) => {
+export const ReadTextFileByFullPath = async ({ path }: { path: string }) => {
   if (await CheckExtenionFromPath({ path: path })) {
     return invoke("read_file", { path: path });
   } else {
