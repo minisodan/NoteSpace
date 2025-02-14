@@ -19,7 +19,7 @@ const BottomBar = ({
 
   const renderHoverLabel = (label: string, id: string) => (
     <div
-      className={`absolute bottom-full mb-2 px-[15%] py-1 bg-neutral-700 text-neutral-300 text-sm rounded-md whitespace-nowrap z-10 ${
+      className={`absolute bottom-full mb-2 px-[15%] p-1 bg-neutral-700 text-neutral-300 text-sm rounded-md whitespace-nowrap z-10 ${
         hoveredButton === id ? "opacity-100" : "opacity-0"
       } transition-opacity`}
     >
@@ -58,7 +58,7 @@ const BottomBar = ({
           onMouseLeave={() => setHoveredButton(null)}
         >
           {renderHoverLabel(label, id)}
-          <Button onClick={onClick}>{icon}</Button>
+          <Button className="p-1" onClick={onClick}>{icon}</Button>
         </div>
       ))}
     </div>
