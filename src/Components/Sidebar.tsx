@@ -1,41 +1,46 @@
 import BottomBar from "./BottomBar";
 import Directories from "./Directories";
+
 import { FILE_CREATION_MODE, FileCreation, FileCreationMode } from "./FileCreation";
 import { DeleteFileByFullPath, FetchAllFilesAndDirectories, StripFileNameFromPath } from "./Utils/FileManagement";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ConfirmationPopup } from "./Widgets/ConfirmationPopup";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [directories, setDirectories] = useState<any[]>([]);
 
-  const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined)
-  const [fileCreationKey, setFileCreationKey] = useState<number>(0)
+  const [fileCreationMode, setFileCreationMode] = useState<
+    FileCreationMode | undefined
+  >(undefined);
+  const [fileCreationKey, setFileCreationKey] = useState<number>(0);
 
   const [deletePath, setDeletePath] = useState<string | undefined>(undefined) 
 
   const updateFileCreation = (mode: FileCreationMode) => {
-    setFileCreationKey(fileCreationKey + 1)
-    setFileCreationMode(mode)
-  }
+    setFileCreationKey(fileCreationKey + 1);
+    setFileCreationMode(mode);
+  };
 
   const fetchedData = async () => {
     const fetchedDirectories = await FetchAllFilesAndDirectories();
     setDirectories(fetchedDirectories);
-  }
+  };
 
-  fetchedData();
+  useEffect(() => {
+    fetchedData();
+  });
 
   return (
     <>
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
         <div className="m-2">
-          {fileCreationMode && 
-            <FileCreation 
-              key={fileCreationKey} 
+          {fileCreationMode && (
+            <FileCreation
+              key={fileCreationKey}
               fileCreationMode={fileCreationMode ?? FILE_CREATION_MODE.FILE}
               onComplete={fetchedData}
             />
-          }
+          )}
         </div>
         {deletePath && 
           <ConfirmationPopup 
@@ -52,10 +57,12 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
           <Directories directories={directories} onDelete={(path) => {setDeletePath(path)}}/>
         </div>
         <div className="mt-auto">
-          <BottomBar 
-            navigate={navigate} 
+          <BottomBar
+            navigate={navigate}
             onFileClick={() => updateFileCreation(FILE_CREATION_MODE.FILE)}
-            onFolderClick={() => updateFileCreation(FILE_CREATION_MODE.DIRECTORY)} 
+            onFolderClick={() =>
+              updateFileCreation(FILE_CREATION_MODE.DIRECTORY)
+            }
           />
         </div>
       </div>
