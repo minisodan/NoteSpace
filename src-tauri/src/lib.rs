@@ -103,7 +103,7 @@ pub fn run() {
                 create_file,
                 create_directory,
                 list_files,
-                read_file
+                read_file,
                 delete_file
             ]
         )
