@@ -11,7 +11,7 @@ const FileListing = ({
   onOpen?: () => void
   onDelete?: () => void
 }) => 
-<Button className="px-1">
+<Button className="p-1">
   <div className="flex items-center text-neutral-800 hover:text-neutral-300"> 
     <div className="text-left w-full text-neutral-300" onClick={onOpen}>{StripFileNameFromPath({path: name})}</div>
     <div className="hover:bg-neutral-800 rounded-md"><IoIosClose onClick={onDelete}/></div>
