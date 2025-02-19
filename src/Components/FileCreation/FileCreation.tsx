@@ -1,5 +1,5 @@
-import { CreateDirectory, CreateFile } from "./Utils/FileManagement";
-import { FocusInput } from "./Widgets/TransientInput";
+import { CreateDirectory, CreateFile } from "../Utils/FileManagement";
+import { FocusInput } from "../Widgets/TransientInput";
 
 /**
  * A file creation type that defines file operations that can be performed.

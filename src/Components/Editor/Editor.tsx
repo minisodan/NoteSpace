@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { platform } from "@tauri-apps/plugin-os";
 
