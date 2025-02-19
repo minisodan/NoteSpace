@@ -1,5 +1,5 @@
-import { StripFileNameFromPath } from "./Utils/FileManagement";
-import { Button } from "./Widgets/Button";
+import { StripFileNameFromPath } from "../Utils/FileManagement";
+import { Button } from "../Widgets/Button";
 import { IoIosClose } from "react-icons/io";
 
 const FileListing = ({ 

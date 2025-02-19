@@ -1,10 +1,9 @@
-import BottomBar from "./BottomBar";
-import Directories from "./Directories";
-
-import { FILE_CREATION_MODE, FileCreation, FileCreationMode } from "./FileCreation";
-import { DeleteFileByFullPath, FetchAllFilesAndDirectories, StripFileNameFromPath } from "./Utils/FileManagement";
+import BottomBar from "../BottomBar/BottomBar";
+import Directories from "../Directories/Directories";
+import { FILE_CREATION_MODE, FileCreation, FileCreationMode } from "../FileCreation/FileCreation";
+import { DeleteFileByFullPath, FetchAllFilesAndDirectories, StripFileNameFromPath } from "../Utils/FileManagement";
 import { useState, useEffect } from "react";
-import { ConfirmationPopup } from "./Widgets/ConfirmationPopup";
+import { ConfirmationPopup } from "../Widgets/ConfirmationPopup";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [directories, setDirectories] = useState<any[]>([]);
@@ -30,6 +29,8 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
     fetchedData();
   });
 
+  // encapsulate file creation and confirmation pop up and directories into parent componnent.
+  // re arrage file structure
   return (
     <>
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
