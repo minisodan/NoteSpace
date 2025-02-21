@@ -1,5 +1,5 @@
 import BottomBar from "../BottomBar/BottomBar";
-import { FILE_CREATION_MODE, FileCreationMode } from "../FileCreation/FileCreation";
+import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
 import { DeleteFileByFullPath, FetchAllFilesAndDirectories } from "../Utils/FileManagement";
 import { useState, useEffect } from "react";
 import FileManager from "./FileManager/FileManager";
@@ -40,6 +40,7 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
             fetchedData();
             setDeletePath(undefined);
           }}
+          onCancel={() => setDeletePath(undefined)}
         />
         <div className="mt-auto">
           <BottomBar

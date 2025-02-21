@@ -1,7 +1,15 @@
 import { StripFileNameFromPath } from "../../../Utils/FileManagement";
 import { ConfirmationPopup } from "../../../Widgets/ConfirmationPopup";
 
-const ConfirmDialog = ({ deletePath, onCancel, onConfirm }: { deletePath: string | undefined; onCancel?: () => void; onConfirm?: () => void }) => {
+const ConfirmDialog = ({
+  deletePath,
+  onCancel,
+  onConfirm,
+}: {
+  deletePath?: string;
+  onCancel?: () => void;
+  onConfirm?: () => void;
+}) => {
   return (
     deletePath && (
       <ConfirmationPopup
@@ -9,8 +17,8 @@ const ConfirmDialog = ({ deletePath, onCancel, onConfirm }: { deletePath: string
           path: deletePath ?? "",
         })}'?`}
         onCancel={onCancel}
-        onConfirm={onConfirm}
-      ></ConfirmationPopup>
+        onConfirm={onConfirm}>
+      </ConfirmationPopup>
     )
   );
 };

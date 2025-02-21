@@ -2,7 +2,7 @@ import {
   FileCreationMode,
   FileCreation,
   FILE_CREATION_MODE,
-} from "../../FileCreation/FileCreation";
+} from "../../Types/FileCreation";
 import Directories from "../../Directories/Directories";
 import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
 
@@ -13,16 +13,18 @@ const FileManager = ({
   fileCreationKey,
   fetchedData,
   onDelete,
-  onConfirm
+  onConfirm,
+  onCancel
 }: {
-  deletePath: string | undefined;
-  directories: any[];
-  fileCreationMode: FileCreationMode | undefined;
-  fileCreationKey: number | null | undefined;
+  deletePath?: string;
+  directories: string[];
+  fileCreationMode?: FileCreationMode;
+  fileCreationKey?: number;
   fetchedData: (path: string) => void;
   onDelete?: (path: string) => void;
   onComplete?: (path: string) => void;
-  onConfirm?: () => void
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }) => {
   return (
     <>
@@ -35,7 +37,7 @@ const FileManager = ({
           />
         )}
       </div>
-      <ConfirmDialog deletePath={deletePath} onConfirm={onConfirm}/>
+      <ConfirmDialog deletePath={deletePath} onConfirm={onConfirm} onCancel={onCancel}/>
       <div className="flex-grow overflow-y-auto">
         <Directories directories={directories} onDelete={onDelete} />
       </div>
