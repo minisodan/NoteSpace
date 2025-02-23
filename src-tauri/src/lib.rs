@@ -1,4 +1,4 @@
-use std::fs::{ self, File };
+use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
 
@@ -9,7 +9,11 @@ fn save_file(content: String, path: String) -> Result<(), String> {
     let path = Path::new(&path);
 
     // decide which file operation to perform.
-    let file_operation = if path.exists() { File::open(path) } else { File::create(path) };
+    let file_operation = if path.exists() {
+        File::open(path)
+    } else {
+        File::create(path)
+    };
 
     // unwrap the result of the file operation
     let mut file = match file_operation {
@@ -50,18 +54,17 @@ fn create_directory(path: String) -> Result<(), String> {
 // deletes a file with the specified path
 #[tauri::command]
 fn delete_file(path: String) -> Result<(), String> {
-
     let full_path = Path::new(&path);
 
     if full_path.is_file() {
         match fs::remove_file(path) {
             Ok(_) => Ok(()),
-            Err(err) => Err(err.to_string())
+            Err(err) => Err(err.to_string()),
         }
     } else {
         match fs::remove_dir(path) {
             Ok(_) => Ok(()),
-            Err(err) => Err(err.to_string())
+            Err(err) => Err(err.to_string()),
         }
     }
 }
@@ -78,7 +81,10 @@ fn read_file(path: String) -> Result<String, String> {
 
     match content {
         Ok(content) => Ok(content),
-        Err(err) => Err(format!("Failed to fetch file contents from path '{}': {}", path, err)),
+        Err(err) => Err(format!(
+            "Failed to fetch file contents from path '{}': {}",
+            path, err
+        )),
     }
 }
 
@@ -86,27 +92,28 @@ fn read_file(path: String) -> Result<String, String> {
 fn list_files(path: String) -> Vec<String> {
     fs::read_dir(path)
         .unwrap()
-        .map(|res| { res.map(|e| e.path().into_os_string().into_string().unwrap()).unwrap() })
+        .map(|res| {
+            res.map(|e| e.path().into_os_string().into_string().unwrap())
+                .unwrap()
+        })
         .collect::<Vec<String>>()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder
-        ::default()
+    tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(
-            tauri::generate_handler![
-                save_file,
-                create_file,
-                create_directory,
-                list_files,
-                read_file,
-                delete_file
-            ]
-        )
+        .invoke_handler(tauri::generate_handler![
+            save_file,
+            create_file,
+            create_directory,
+            list_files,
+            read_file,
+            delete_file
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
