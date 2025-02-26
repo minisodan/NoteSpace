@@ -3,6 +3,7 @@ import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
 import { DeleteFileByFullPath, FetchAllFilesAndDirectories } from "../Utils/FileManagement";
 import { useState, useEffect } from "react";
 import FileManager from "./FileManager/FileManager";
+import { CloseAll, Open } from "../Utils/Store";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [directories, setDirectories] = useState<any[]>([]);
@@ -35,6 +36,10 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
           fileCreationKey={fileCreationKey}
           fetchedData={fetchedData}
           onDelete={path => setDeletePath(path)}
+          onOpen={path => {
+            CloseAll()
+            Open(path)
+          }}
           onConfirm={() => {
             deletePath && DeleteFileByFullPath({ path: deletePath });
             fetchedData();
