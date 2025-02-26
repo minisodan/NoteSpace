@@ -14,6 +14,7 @@ const FileManager = ({
   fetchedData,
   onDelete,
   onConfirm,
+  onOpen,
   onCancel
 }: {
   deletePath?: string;
@@ -21,6 +22,7 @@ const FileManager = ({
   fileCreationMode?: FileCreationMode;
   fileCreationKey?: number;
   fetchedData: (path: string) => void;
+  onOpen?: (path: string) => void;
   onDelete?: (path: string) => void;
   onComplete?: (path: string) => void;
   onConfirm?: () => void;
@@ -39,7 +41,7 @@ const FileManager = ({
       </div>
       <ConfirmDialog deletePath={deletePath} onConfirm={onConfirm} onCancel={onCancel}/>
       <div className="flex-grow overflow-y-auto">
-        <Directories directories={directories} onDelete={onDelete} />
+        <Directories directories={directories} onOpen={onOpen} onDelete={onDelete}/>
       </div>
     </>
   );

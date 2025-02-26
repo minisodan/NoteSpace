@@ -35,7 +35,7 @@ const Directories = ({
   return (
     <div className="flex flex-col m-2 gap-1">
       {directories.map((dir, i) => (
-        <FileListing key={i} name={dir} onDelete={() => onDelete(dir)}/>
+        <FileListing key={i} name={dir} onDelete={() => onDelete(dir)} onOpen={() => onOpen(dir)}/>
       ))}
     </div>
   );
