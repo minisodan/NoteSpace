@@ -2,6 +2,24 @@ import { StripFileNameFromPath } from "../Utils/FileManagement";
 import { Button } from "../Widgets/Button";
 import { IoIosClose } from "react-icons/io";
 
+const Directories = ({ 
+  directories, 
+  onOpen = () => {},
+  onDelete = () => {},
+}: { 
+  directories: FileType[] 
+  onOpen?: (dir: FileType) => void
+  onDelete?: (dir: string) => void
+}) => {
+  return (
+    <div className="flex flex-col m-2 gap-1">
+      {directories.map((dir, i) => (
+        <FileListing key={i} name={dir.path} onDelete={() => onDelete(dir.path)} onOpen={() => onOpen(dir)}/>
+      ))}
+    </div>
+  );
+};
+
 const FileListing = ({
   name = "",
   onOpen = () => {},
@@ -22,23 +40,5 @@ const FileListing = ({
     </div>
   </Button>
 );
-
-const Directories = ({ 
-  directories, 
-  onOpen = () => {},
-  onDelete = () => {} 
-}: { 
-  directories: string[] 
-  onOpen?: (dir: string) => void
-  onDelete?: (dir: string) => void
-}) => {
-  return (
-    <div className="flex flex-col m-2 gap-1">
-      {directories.map((dir, i) => (
-        <FileListing key={i} name={dir} onDelete={() => onDelete(dir)} onOpen={() => onOpen(dir)}/>
-      ))}
-    </div>
-  );
-};
 
 export default Directories;

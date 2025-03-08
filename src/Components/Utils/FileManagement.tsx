@@ -27,13 +27,21 @@ export const CreateDirectory = async ({ path }: { path: string }) => {
 };
 
 export const CreateApplicationDirectory = async () =>
-  invoke("create_directory", { path: await GetApplicationPath() });
+  invoke("create_director y", { path: await GetApplicationPath() });
 
 export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
   return invoke("delete_file", { path: path });
 }
 
-export const FetchAllFilesAndDirectories = async () => invoke("list_files", { path: await GetApplicationPath() }) as Promise<string[]>;
+/**
+ * If current path is nullish, function will fetch base directory files and directories. Otherwise will fetch by path.
+ * 
+ * @param path current path with files and directories.
+ * @returns a list files and directories as FileType.
+ */
+export const FetchAllFilesAndDirectories = async ({ path }: { path: string }) => {
+  return invoke("list_files", { path: path ?? await GetApplicationPath() }) as Promise<FileType[]>;
+}
 
 /**
  * Reads and returns the entire contents of a file.
