@@ -14,20 +14,27 @@ export const SaveFile = ({
   path: string;
 }) => invoke("save_file", { content: content, path: path });
 
+/**
+ * Creates a file with absolute path.
+ * 
+ * @param path Absolute path to create file. 
+ * @returns A promise resolving or rejecting to the backend response. 
+ */
 export const CreateFile = async ({ path }: { path: string }) => {
-  const fullPath = await join(await GetApplicationPath(), path);
-
-  return invoke("create_file", { path: fullPath });
+  return invoke("create_file", { path: path });
 };
 
-export const CreateDirectory = async ({ path }: { path: string }) => {
-  const fullPath = await join(await GetApplicationPath(), path);
-
-  return invoke("create_directory", { path: fullPath });
-};
+/**
+ * Creates a file with absolute path.
+ * 
+ * @param path Absolute path to create file. 
+ * @returns A promise resolving or rejecting to the backend response. 
+ */
+export const CreateDirectory = async ({ path }: { path: string }) =>
+  invoke("create_directory", { path: path });
 
 export const CreateApplicationDirectory = async () =>
-  invoke("create_director y", { path: await GetApplicationPath() });
+  invoke("create_directory", { path: await GetApplicationPath() });
 
 export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
   return invoke("delete_file", { path: path });
