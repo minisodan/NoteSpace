@@ -4,7 +4,6 @@ import { DeleteFileByFullPath, FetchAllFilesAndDirectories } from "../Utils/File
 import { useState, useEffect } from "react";
 import FileManager from "./FileManager/FileManager";
 import { CloseAllFiles, Open } from "../Utils/Store";
-import { GetDirectory } from "../Utils/Store";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [directories, setDirectories] = useState<FileType[]>([]);
@@ -24,7 +23,6 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   };
 
   useEffect(() => {
-    console.log(`CURRENT: ${currentDirectory}`)
     fetchedData(currentDirectory.path);
   });
 

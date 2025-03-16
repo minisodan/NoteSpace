@@ -11,8 +11,6 @@ const Directories = ({
   onOpen?: (dir: FileType) => void
   onDelete?: (dir: string) => void
 }) => {
-  console.log(`DIRECTORIES ${directories.map((dir) => `${dir.isDirectory}, ${dir.path}`)}`)
-
   return (
     <div className="flex flex-col m-2 gap-1">
       {directories.map((dir, i) => (

@@ -46,8 +46,6 @@ export const FileCreation = ({
 		onComplete={ async (path: string) => {
 			const osSeparator = await sep();
 			let fullPath = `${await GetDirectory()}${osSeparator}${path}`
-			console.log(`HELLO ${fullPath}`)
-
 			path ? fileCreationMode.create({path: fullPath}).then(() => onComplete ? onComplete(fullPath) : {}) : {}
 		}
     }/>

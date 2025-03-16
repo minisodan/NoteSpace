@@ -62,7 +62,9 @@ const OpenDirectory = async (directory: FileType) => {
 export const ListFiles: () => Promise<{[key: string]: FileMetadata}> = async () => await store.get(OPEN_FILES) ?? {}
 
 /**
+ * Funtion to fetch the current directory in the cache.
  * 
+ * @returns The Current path as a FileType
  */
 export const GetDirectory = async () => {
 	return await store.get(CURRENT_DIRECTORY) as FileType;

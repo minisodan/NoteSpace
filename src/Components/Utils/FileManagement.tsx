@@ -4,9 +4,12 @@ import { platform } from "@tauri-apps/plugin-os";
 import { extname } from "@tauri-apps/api/path";
 import { Open } from "../Utils/Store";
 
-const GetApplicationPath = async () =>
-  await join(await homeDir(), ".notespace");
-
+/**
+ * Saves a file with its content.
+ * 
+ * @param content Content of the file to be saved
+ * @param path The path of the given file to be saved
+ */
 export const SaveFile = ({
   content,
   path,
@@ -47,11 +50,12 @@ export const CreateFile = async ({ path }: { path: string }) => {
 export const CreateDirectory = async ({ path }: { path: string }) =>
   invoke("create_directory", { path: path });
 
-const CreateApplicationDirectory = async () => {
-
-  invoke("create_directory", { path: await GetApplicationPath() });
-}
-
+/**
+ * Deletes the file based on the given absolute path
+ * 
+ * @param path pased in path to be deleted
+ * @returns deletes the file based on path
+ */
 export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
   return invoke("delete_file", { path: path });
 }
@@ -80,6 +84,27 @@ export const ReadTextFileByFullPath = async ({ path }: { path: string }) => {
   }
 };
 
+/**
+ * Helper function to create the base level application path as a string.
+ * 
+ * @returns returns a joined string that is the applications path
+ */
+const GetApplicationPath = async () =>
+  await join(await homeDir(), ".notespace");
+
+/**
+ * Helper function to that creates the base application.
+ */
+const CreateApplicationDirectory = async () => {
+  invoke("create_directory", { path: await GetApplicationPath() });
+}
+
+/**
+ * Strips the name from the path 
+ * 
+ * @param path the path to be stripped
+ * @returns The stripped name from the path 
+ */
 export const StripFileNameFromPath = ({ path }: { path: string }) => {
   // for a given path, remove everything other than the final path and extension
   let fileName = path.substring(
@@ -116,7 +141,7 @@ export const CheckExtenionFromPath = async ({
 };
 
 /**
- * helper function that validates a file extention against the following allowed extensions:
+ * Helper function that validates a file extention against the following allowed extensions:
  *
  * - `.txt`
  * - `.md`
