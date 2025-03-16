@@ -22,7 +22,7 @@ const FileManager = ({
   fileCreationMode?: FileCreationMode;
   fileCreationKey?: number;
   fetchedData: (path: string) => void;
-  onOpen?: (path: FileType) => void;
+  onOpen?: (fileType: FileType) => void;
   onDelete?: (path: string) => void;
   onComplete?: (path: string) => void;
   onConfirm?: () => void;

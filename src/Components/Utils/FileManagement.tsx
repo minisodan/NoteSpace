@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { homeDir, join } from "@tauri-apps/api/path";
 import { platform } from "@tauri-apps/plugin-os";
 import { extname } from "@tauri-apps/api/path";
+import { Open } from "../Utils/Store";
 
 const GetApplicationPath = async () =>
   await join(await homeDir(), ".notespace");
@@ -13,6 +14,19 @@ export const SaveFile = ({
   content: string;
   path: string;
 }) => invoke("save_file", { content: content, path: path });
+
+/**
+ * Creates the inital directory and sets the cache to the application directory
+ */
+export const InitilizeApplicationAndFiles = async () => {
+  const fileType = {
+    path: await GetApplicationPath(),
+    isDirectory: true
+  } as FileType;
+
+  CreateApplicationDirectory()
+  Open(fileType)
+}
 
 /**
  * Creates a file with absolute path.
@@ -33,8 +47,10 @@ export const CreateFile = async ({ path }: { path: string }) => {
 export const CreateDirectory = async ({ path }: { path: string }) =>
   invoke("create_directory", { path: path });
 
-export const CreateApplicationDirectory = async () =>
+const CreateApplicationDirectory = async () => {
+
   invoke("create_directory", { path: await GetApplicationPath() });
+}
 
 export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
   return invoke("delete_file", { path: path });

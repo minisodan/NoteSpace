@@ -5,9 +5,10 @@ use std::path::Path;
 
 /// Struct for collecting file types.
 #[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
 struct FileType {
     path: String,
-    directory: bool
+    is_directory: bool
 }
 
 
@@ -107,7 +108,7 @@ fn list_files(path: String) -> Result<Vec<FileType>, String> {
 
                 Ok(FileType {
                     path: e.path().to_string_lossy().into_owned(),
-                    directory: metadata.is_dir(),
+                    is_directory: metadata.is_dir(),
                 })
             })
             .map_err(|e| e.to_string())?

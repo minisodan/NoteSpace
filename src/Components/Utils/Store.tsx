@@ -30,7 +30,7 @@ export const CloseFile = async (path: string) => {
  * @param value optional Metadata
  */
 export const Open = async (fileType: FileType, value?: FileMetadata) => {
-	fileType.isDirectory ? OpenFile(fileType, value) : OpenDirectory(fileType)
+	fileType.isDirectory ? OpenDirectory(fileType) : OpenFile(fileType, value)
 }
 
 /**
@@ -65,5 +65,5 @@ export const ListFiles: () => Promise<{[key: string]: FileMetadata}> = async () 
  * 
  */
 export const GetDirectory = async () => {
-	return await store.get(CURRENT_DIRECTORY);
+	return await store.get(CURRENT_DIRECTORY) as FileType;
 }
