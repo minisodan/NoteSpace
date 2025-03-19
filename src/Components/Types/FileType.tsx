@@ -1,9 +1,9 @@
 /**
  * A type representing a File that holds the following: 
- * - Path: string
+ * - path: string
  * - isDirectory: boolean
  */
-type FileType = {
+export type FileType = {
     path: string,
     isDirectory: boolean
 }

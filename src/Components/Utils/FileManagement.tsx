@@ -3,6 +3,16 @@ import { homeDir, join } from "@tauri-apps/api/path";
 import { platform } from "@tauri-apps/plugin-os";
 import { extname } from "@tauri-apps/api/path";
 import { Open } from "../Utils/Store";
+import { FileType } from "../Types/FileType";
+
+/**
+ * Helper function to that creates the base application.
+ */
+export const CreateApplicationDirectory = async () => {
+  let path = await GetApplicationPath();
+
+  CreateDirectory({path: path});
+}
 
 /**
  * Saves a file with its content.
@@ -19,15 +29,14 @@ export const SaveFile = ({
 }) => invoke("save_file", { content: content, path: path });
 
 /**
- * Creates the inital directory and sets the cache to the application directory
+ * Initalizes the cache to the application directory
  */
-export const InitilizeApplicationAndFiles = async () => {
+export const InitilizeFiles = async () => {
   const fileType = {
     path: await GetApplicationPath(),
     isDirectory: true
   } as FileType;
 
-  CreateApplicationDirectory()
   Open(fileType)
 }
 
@@ -35,7 +44,7 @@ export const InitilizeApplicationAndFiles = async () => {
  * Creates a file with absolute path.
  * 
  * @param path Absolute path to create file. 
- * @returns A promise resolving or rejecting to the backend response. 
+ * @returns A promise resolving or rejecting to the backend response.
  */
 export const CreateFile = async ({ path }: { path: string }) => {
   return invoke("create_file", { path: path });
@@ -93,13 +102,6 @@ const GetApplicationPath = async () =>
   await join(await homeDir(), ".notespace");
 
 /**
- * Helper function to that creates the base application.
- */
-const CreateApplicationDirectory = async () => {
-  invoke("create_directory", { path: await GetApplicationPath() });
-}
-
-/**
  * Strips the name from the path 
  * 
  * @param path the path to be stripped
@@ -127,16 +129,10 @@ export const StripFileNameFromPath = ({ path }: { path: string }) => {
  * @param path path of file to fetch content from
  * @returns true if the file extention is valid, false otherwise.
  */
-export const CheckExtenionFromPath = async ({
-  path,
-}: {
-  path: string;
-}): Promise<boolean> => {
+export const CheckExtenionFromPath = async ({ path }: { path: string }): Promise<boolean> => {
   const pathExtention = await extname(path);
 
-  if (pathExtention) {
-    return CheckValidFileExtention({ extention: pathExtention });
-  }
+  pathExtention ?? CheckValidFileExtention({ extention: pathExtention });
   return false;
 };
 

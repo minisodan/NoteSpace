@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Editor from "./Components/Editor/Editor";
 import Settings from "./Components/Settings/Settings";
-import { InitilizeApplicationAndFiles } from "./Components/Utils/FileManagement";
+import { CreateApplicationDirectory, InitilizeFiles } from "./Components/Utils/FileManagement";
 
 // ON START
-InitilizeApplicationAndFiles().catch();
+CreateApplicationDirectory().catch();
+InitilizeFiles().catch();
 
 const App = () => (
   <Router>

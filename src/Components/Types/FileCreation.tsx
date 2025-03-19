@@ -1,7 +1,7 @@
 import { CreateDirectory, CreateFile } from "../Utils/FileManagement";
 import { FocusInput } from "../Widgets/TransientInput";
 import { GetDirectory } from "../Utils/Store";
-import { sep } from '@tauri-apps/api/path';;
+import { sep } from '@tauri-apps/api/path';
 
 /**
  * A file creation type that defines file operations that can be performed.

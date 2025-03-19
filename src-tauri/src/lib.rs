@@ -2,15 +2,13 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
 
-
-/// Struct for collecting file types.
+/// Struct for representing file types.
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 struct FileType {
     path: String,
     is_directory: bool
 }
-
 
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
@@ -105,9 +103,10 @@ fn list_files(path: String) -> Result<Vec<FileType>, String> {
         .map(|res| {
             res.map(|e| {
                 let metadata = e.metadata().map_err(|e| e.to_string())?;
+                let path = e.path().to_string_lossy().into_owned();
 
                 Ok(FileType {
-                    path: e.path().to_string_lossy().into_owned(),
+                    path: path,
                     is_directory: metadata.is_dir(),
                 })
             })

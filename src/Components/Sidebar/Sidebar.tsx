@@ -4,9 +4,10 @@ import { DeleteFileByFullPath, FetchAllFilesAndDirectories } from "../Utils/File
 import { useState, useEffect } from "react";
 import FileManager from "./FileManager/FileManager";
 import { CloseAllFiles, Open } from "../Utils/Store";
+import { FileType } from "../Types/FileType";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
-  const [directories, setDirectories] = useState<FileType[]>([]);
+  const [fileListings, setFileListings] = useState<FileType[]>([]);
   const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined);
   const [fileCreationKey, setFileCreationKey] = useState<number>(0);
   const [deletePath, setDeletePath] = useState<string | undefined>(undefined)
@@ -18,8 +19,8 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   };
 
   const fetchedData = async (currentDirectory: string) => {
-    const fetchedDirectories = await FetchAllFilesAndDirectories({ path: currentDirectory! });
-    setDirectories(fetchedDirectories);
+    const fetchedDirectories = await FetchAllFilesAndDirectories({ path: currentDirectory });
+    setFileListings(fetchedDirectories);
   };
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
         <FileManager
           deletePath={deletePath}
-          directories={directories}
+          fileListings={fileListings}
           fileCreationMode={fileCreationMode}
           fileCreationKey={fileCreationKey}
           fetchedData={fetchedData}
