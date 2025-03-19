@@ -3,12 +3,13 @@ import {
   FileCreation,
   FILE_CREATION_MODE,
 } from "../../Types/FileCreation";
-import Directories from "../../Directories/Directories";
+import FileListings from "../../FileListings/FileListings";
 import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
+import { FileType } from "../../Types/FileType";
 
 const FileManager = ({
   deletePath,
-  directories,
+  fileListings,
   fileCreationMode,
   fileCreationKey,
   fetchedData,
@@ -18,11 +19,11 @@ const FileManager = ({
   onCancel
 }: {
   deletePath?: string;
-  directories: string[];
+  fileListings: FileType[];
   fileCreationMode?: FileCreationMode;
   fileCreationKey?: number;
   fetchedData: (path: string) => void;
-  onOpen?: (path: string) => void;
+  onOpen?: (fileType: FileType) => void;
   onDelete?: (path: string) => void;
   onComplete?: (path: string) => void;
   onConfirm?: () => void;
@@ -41,7 +42,7 @@ const FileManager = ({
       </div>
       <ConfirmDialog deletePath={deletePath} onConfirm={onConfirm} onCancel={onCancel}/>
       <div className="flex-grow overflow-y-auto">
-        <Directories directories={directories} onOpen={onOpen} onDelete={onDelete}/>
+        <FileListings fileListings={fileListings} onOpen={onOpen} onDelete={onDelete}/>
       </div>
     </>
   );

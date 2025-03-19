@@ -1,5 +1,7 @@
 import { CreateDirectory, CreateFile } from "../Utils/FileManagement";
 import { FocusInput } from "../Widgets/TransientInput";
+import { GetDirectory } from "../Utils/Store";
+import { sep } from '@tauri-apps/api/path';
 
 /**
  * A file creation type that defines file operations that can be performed.
@@ -27,6 +29,7 @@ export const FILE_CREATION_MODE = {
 
 /**
  * An Input component that on completion, performs the file operation specified on the value inputted.
+ * 
  * @param mode FileCreationMode specifier
  * @param onComplete callback that performs arbitrary functions on completion of file operation.
  * @returns file creation input element
@@ -40,9 +43,9 @@ export const FileCreation = ({
 }) => 
 	<FocusInput 
 		placeholder={`${fileCreationMode.name} name...`} 
-		onComplete={(path: string) => 
-      path ? fileCreationMode.create({path: path})
-        .then(() => onComplete ? onComplete(path) : {}) 
-        : {}
-    }
-	/>
+		onComplete={ async (path: string) => {
+			const osSeparator = await sep();
+			let fullPath = `${await GetDirectory()}${osSeparator}${path}`
+			path ? fileCreationMode.create({path: fullPath}).then(() => onComplete ? onComplete(fullPath) : {}) : {}
+		}
+    }/>

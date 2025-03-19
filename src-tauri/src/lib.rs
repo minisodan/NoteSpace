@@ -2,6 +2,14 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
 
+/// Struct for representing file types.
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct FileType {
+    path: String,
+    is_directory: bool
+}
+
 /// Saves a file to the system with 'content' at location 'path'.
 /// A result type will be returned depending on whether the operation succeded or failed, and why.
 #[tauri::command]
@@ -89,14 +97,24 @@ fn read_file(path: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-fn list_files(path: String) -> Vec<String> {
-    fs::read_dir(path)
-        .unwrap()
+fn list_files(path: String) -> Result<Vec<FileType>, String> {
+    let files = fs::read_dir(path)
+        .map_err(|e| e.to_string())?
         .map(|res| {
-            res.map(|e| e.path().into_os_string().into_string().unwrap())
-                .unwrap()
+            res.map(|e| {
+                let metadata = e.metadata().map_err(|e| e.to_string())?;
+                let path = e.path().to_string_lossy().into_owned();
+
+                Ok(FileType {
+                    path: path,
+                    is_directory: metadata.is_dir(),
+                })
+            })
+            .map_err(|e| e.to_string())?
         })
-        .collect::<Vec<String>>()
+        .collect::<Result<Vec<FileType>, String>>()?;
+
+    Ok(files)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

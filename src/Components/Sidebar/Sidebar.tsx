@@ -3,26 +3,28 @@ import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
 import { DeleteFileByFullPath, FetchAllFilesAndDirectories } from "../Utils/FileManagement";
 import { useState, useEffect } from "react";
 import FileManager from "./FileManager/FileManager";
-import { CloseAll, Open } from "../Utils/Store";
+import { CloseAllFiles, Open } from "../Utils/Store";
+import { FileType } from "../Types/FileType";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
-  const [directories, setDirectories] = useState<any[]>([]);
+  const [fileListings, setFileListings] = useState<FileType[]>([]);
   const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined);
   const [fileCreationKey, setFileCreationKey] = useState<number>(0);
   const [deletePath, setDeletePath] = useState<string | undefined>(undefined)
+  const [currentDirectory, setCurrentDirectory] = useState<FileType>({} as FileType)
 
   const updateFileCreation = (mode: FileCreationMode) => {
     setFileCreationKey(fileCreationKey + 1);
     setFileCreationMode(mode);
   };
 
-  const fetchedData = async () => {
-    const fetchedDirectories = await FetchAllFilesAndDirectories();
-    setDirectories(fetchedDirectories);
+  const fetchedData = async (currentDirectory: string) => {
+    const fetchedDirectories = await FetchAllFilesAndDirectories({ path: currentDirectory });
+    setFileListings(fetchedDirectories);
   };
 
   useEffect(() => {
-    fetchedData();
+    fetchedData(currentDirectory.path);
   });
 
   // encapsulate file creation and confirmation pop up and directories into parent componnent.
@@ -31,18 +33,19 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
         <FileManager
           deletePath={deletePath}
-          directories={directories}
+          fileListings={fileListings}
           fileCreationMode={fileCreationMode}
           fileCreationKey={fileCreationKey}
           fetchedData={fetchedData}
           onDelete={path => setDeletePath(path)}
-          onOpen={path => {
-            CloseAll()
-            Open(path)
+          onOpen={async fileType => { // fileType is a type that tells the program wether the file is a directory or file
+            !fileType.isDirectory && CloseAllFiles()
+            setCurrentDirectory(fileType)
+            Open(fileType)
           }}
           onConfirm={() => {
             deletePath && DeleteFileByFullPath({ path: deletePath });
-            fetchedData();
+            fetchedData(currentDirectory.path);
             setDeletePath(undefined);
           }}
           onCancel={() => setDeletePath(undefined)}
