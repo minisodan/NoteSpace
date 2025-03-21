@@ -4,7 +4,7 @@ import {
   PiGearLight,
 } from "react-icons/pi";
 import { useState } from "react";
-import { Button } from "../Widgets/Button";
+import { Button } from "../../Widgets/Button";
 
 const BottomBar = ({ 
   navigate, 
