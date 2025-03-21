@@ -1,10 +1,11 @@
-import BottomBar from "../BottomBar/BottomBar";
+import BottomBar from "./BottomBar/BottomBar";
 import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
-import { DeleteFileByFullPath, FetchAllFilesAndDirectories } from "../Utils/FileManagement";
+import { DeleteFileByFullPath, FetchAllFilesAndDirectories, StepBackPath } from "../Utils/FileManagement";
 import { useState, useEffect } from "react";
 import FileManager from "./FileManager/FileManager";
 import { CloseAllFiles, Open } from "../Utils/Store";
 import { FileType } from "../Types/FileType";
+import TopBar from "./TopBar/TopBar";
 
 const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   const [fileListings, setFileListings] = useState<FileType[]>([]);
@@ -31,6 +32,15 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
   return (
     <>
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
+        <TopBar 
+          directory={currentDirectory.path}
+          onBack={() => {
+            setCurrentDirectory({
+              path: StepBackPath({path: currentDirectory.path}),
+              isDirectory: true
+            })
+          }}
+        />  
         <FileManager
           deletePath={deletePath}
           fileListings={fileListings}
@@ -40,7 +50,7 @@ const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
           onDelete={path => setDeletePath(path)}
           onOpen={async fileType => { // fileType is a type that tells the program wether the file is a directory or file
             !fileType.isDirectory && CloseAllFiles()
-            setCurrentDirectory(fileType)
+            fileType.isDirectory && setCurrentDirectory(fileType)
             Open(fileType)
           }}
           onConfirm={() => {

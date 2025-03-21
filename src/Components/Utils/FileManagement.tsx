@@ -98,7 +98,7 @@ export const ReadTextFileByFullPath = async ({ path }: { path: string }) => {
  * 
  * @returns returns a joined string that is the applications path
  */
-const GetApplicationPath = async () =>
+export const GetApplicationPath = async () =>
   await join(await homeDir(), ".notespace");
 
 /**
@@ -122,6 +122,20 @@ export const StripFileNameFromPath = ({ path }: { path: string }) => {
     fileName.includes(".") ? fileName.indexOf(".") : fileName.length
   );
 };
+
+export const StepBackPath = ({ path }: { path: string }) => {
+  let indexOfLastSlash = platform() === "windows"
+      ? path.lastIndexOf("\\")
+      : path.lastIndexOf("/") + 1
+  console.log(path, path.substring(
+    0,
+    indexOfLastSlash - 1
+  ), indexOfLastSlash, path.length)
+  return path.substring(
+    0,
+    indexOfLastSlash - 1
+  );
+}
 
 /**
  * Fucntion fetch extention from path and pass to a validator
