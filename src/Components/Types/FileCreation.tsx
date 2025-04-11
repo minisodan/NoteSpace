@@ -1,6 +1,6 @@
-import { CreateDirectory, CreateFile } from "../Utils/FileManagement";
+import { createDirectory, createFile } from "../Utils/FileManagement";
+import { useStore } from "../Utils/Store";
 import { FocusInput } from "../Widgets/TransientInput";
-import { GetDirectory } from "../Utils/Store";
 import { sep } from '@tauri-apps/api/path';
 
 /**
@@ -18,11 +18,11 @@ export interface FileCreationMode {
  */
 export const FILE_CREATION_MODE = {
 	FILE: {
-		create: CreateFile,
+		create: createFile,
 		name: 'File'
 	} as FileCreationMode,
 	DIRECTORY: {
-		create: CreateDirectory,
+		create: createDirectory,
 		name: 'Directory'
 	} as FileCreationMode
 }
@@ -40,12 +40,14 @@ export const FileCreation = ({
 }: {
   fileCreationMode: FileCreationMode
   onComplete?: (path: string) => void 
-}) => 
-	<FocusInput 
+}) => {
+  const workingDirectory = useStore(state => state.workingDirectory)
+  return <FocusInput 
 		placeholder={`${fileCreationMode.name} name...`} 
 		onComplete={ async (path: string) => {
 			const osSeparator = await sep();
-			let fullPath = `${await GetDirectory()}${osSeparator}${path}`
+			let fullPath = `${workingDirectory}${osSeparator}${path}`
 			path ? fileCreationMode.create({path: fullPath}).then(() => onComplete ? onComplete(fullPath) : {}) : {}
 		}
     }/>
+}

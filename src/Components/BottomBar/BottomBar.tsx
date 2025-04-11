@@ -5,17 +5,18 @@ import {
 } from "react-icons/pi";
 import { useState } from "react";
 import { Button } from "../Widgets/Button";
+import { useNavigate } from "react-router-dom";
 
 const BottomBar = ({ 
-  navigate, 
   onFileClick, 
   onFolderClick 
 }: { 
-  navigate: (path: string) => void
   onFileClick:  () => void
   onFolderClick: () => void
 }) => {
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const renderHoverLabel = (label: string, id: string) => (
     <div
