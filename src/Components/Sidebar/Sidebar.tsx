@@ -29,12 +29,11 @@ const Sidebar = () => {
           fileCreationKey={fileCreationKey}
           onDelete={path => setDeletePath(path)}
           onOpen={fileType => {
-            console.log(fileType)
             if (fileType.isDirectory) {
-              setWorkingDirectory({path: fileType.path})
+              setWorkingDirectory(fileType.path)
             } else {
               closeAllFiles()
-              openFile({path: fileType.path})
+              openFile(fileType.path)
             }
           }}
           onConfirm={() => {
