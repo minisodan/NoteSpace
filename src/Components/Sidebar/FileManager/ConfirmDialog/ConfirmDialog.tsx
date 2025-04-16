@@ -1,4 +1,4 @@
-import { StripFileNameFromPath } from "../../../Utils/FileManagement";
+import { stripFileNameFromPath } from "../../../Utils/FileManagement";
 import { ConfirmationPopup } from "../../../Widgets/ConfirmationPopup";
 
 const ConfirmDialog = ({
@@ -13,7 +13,7 @@ const ConfirmDialog = ({
   return (
     deletePath && (
       <ConfirmationPopup
-        bodyText={`Are you sure you want to delete '${StripFileNameFromPath({
+        bodyText={`Are you sure you want to delete '${stripFileNameFromPath({
           path: deletePath ?? "",
         })}'?`}
         onCancel={onCancel}
