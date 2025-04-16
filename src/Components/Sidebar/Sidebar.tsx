@@ -1,9 +1,9 @@
-import BottomBar from "../BottomBar/BottomBar";
 import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
 import { deleteFile } from "../Utils/FileManagement";
 import { useState } from "react";
 import FileManager from "./FileManager/FileManager";
 import { useStore } from "../Utils/Store";
+import BottomBar from "./BottomBar/BottomBar";
 
 const Sidebar = () => {
   const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined);

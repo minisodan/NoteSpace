@@ -1,4 +1,4 @@
-import { load, Store } from "@tauri-apps/plugin-store"
+import { load } from "@tauri-apps/plugin-store"
 import { create } from 'zustand'
 import { FileMetadata } from "../Types/FileMetadata"
 import { deleteObjectKeyValue, safeObjectAccess, setObjectKeyValue } from "./Helpers"
@@ -28,8 +28,9 @@ interface ApplicationState {
 
 /**
  * save a given value to the key persistently.
- * @param key 
- * @param state 
+ *
+ * @param key value to use as persistent key
+ * @param state value to store to key
  * @returns the state saved
  */
 function _saveToPrimaryStorage(key: string, state: any): ApplicationState {
@@ -40,6 +41,13 @@ function _saveToPrimaryStorage(key: string, state: any): ApplicationState {
 
 /**
  * Store definition
+ * 
+ * openFiles - the variable keeping track of the current open files.
+ * workingDirectory - the variable keeping track of the current open directory of the user.
+ * openFiles - function to open a given file
+ * closeFile - function to close a given file
+ * closeAllFiles - function to close all open files
+ * setWorkingDirectory - function to set the current working directory
  */
 export const useStore = create<ApplicationState>(set => ({
 	openFiles: _openFiles,
@@ -91,7 +99,6 @@ export const useStore = create<ApplicationState>(set => ({
   setWorkingDirectory: (workingDirectory) => set(state => {
     const sameWorkingDirectory = workingDirectory === state.workingDirectory
     
-    console.log(workingDirectory, sameWorkingDirectory)
     if (sameWorkingDirectory) return state
       
     const updatedState = setObjectKeyValue(

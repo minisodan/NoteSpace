@@ -16,10 +16,10 @@ const FileListings = ({
   const [filesInWorkingDirectory, setFilesInWorkingDirectory] = useState<FileType[]>([])
 
   useEffect(() => {
-    async function fn() {
+    async function fetchFilesinWorkingDirectory() {
       setFilesInWorkingDirectory(await fetchAllFilesAndDirectories({path: workingDirectory}))
     }
-    fn()
+    fetchFilesinWorkingDirectory()
   }, [workingDirectory])
 
   const FileListings = filesInWorkingDirectory.map((fileType, i) => (

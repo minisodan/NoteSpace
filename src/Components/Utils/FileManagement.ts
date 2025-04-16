@@ -9,7 +9,6 @@ import { FileType } from "../Types/FileType";
  * 
  * @returns returns a joined string that is the applications path
  */
-
 export const APPLICATION_PATH = await join(await homeDir(), ".notespace");
 
 /**

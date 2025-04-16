@@ -4,8 +4,8 @@ import {
   PiGearLight,
 } from "react-icons/pi";
 import { useState } from "react";
-import { Button } from "../Widgets/Button";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../Widgets/Button";
 
 const BottomBar = ({ 
   onFileClick, 
