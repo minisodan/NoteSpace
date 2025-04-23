@@ -103,9 +103,23 @@ export const stripFileNameFromPath = ({ path }: { path: string }) => {
   // if the fileName has an extension, remove it.
   return fileName.substring(
     0,
-    fileName.includes(".") ? fileName.indexOf(".") : fileName.length
+    fileName.includes(".") && fileName.charAt(0) !== '.' ? fileName.indexOf(".") : fileName.length
   );
 };
+
+export const StepBackPath = ({ path }: { path: string }) => {
+  let indexOfLastSlash = platform() === "windows"
+      ? path.lastIndexOf("\\")
+      : path.lastIndexOf("/") + 1
+  console.log(path, path.substring(
+    0,
+    indexOfLastSlash - 1
+  ), indexOfLastSlash, path.length)
+  return path.substring(
+    0,
+    indexOfLastSlash - 1
+  );
+}
 
 /**
  * Fucntion fetch extention from path and pass to a validator
