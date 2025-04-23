@@ -1,68 +1,57 @@
-import BottomBar from "./BottomBar/BottomBar";
 import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
-import { DeleteFileByFullPath, FetchAllFilesAndDirectories, StepBackPath } from "../Utils/FileManagement";
-import { useState, useEffect } from "react";
+import { APPLICATION_PATH, deleteFile, StepBackPath } from "../Utils/FileManagement";
+import { useState } from "react";
 import FileManager from "./FileManager/FileManager";
-import { CloseAllFiles, Open } from "../Utils/Store";
-import { FileType } from "../Types/FileType";
+import { useStore } from "../Utils/Store";
+import BottomBar from "./BottomBar/BottomBar";
 import TopBar from "./TopBar/TopBar";
 
-const Sidebar = ({ navigate }: { navigate: (path: string) => void }) => {
-  const [fileListings, setFileListings] = useState<FileType[]>([]);
+const Sidebar = () => {
   const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined);
   const [fileCreationKey, setFileCreationKey] = useState<number>(0);
   const [deletePath, setDeletePath] = useState<string | undefined>(undefined)
-  const [currentDirectory, setCurrentDirectory] = useState<FileType>({} as FileType)
 
   const updateFileCreation = (mode: FileCreationMode) => {
     setFileCreationKey(fileCreationKey + 1);
     setFileCreationMode(mode);
   };
 
-  const fetchedData = async (currentDirectory: string) => {
-    const fetchedDirectories = await FetchAllFilesAndDirectories({ path: currentDirectory });
-    setFileListings(fetchedDirectories);
-  };
-
-  useEffect(() => {
-    fetchedData(currentDirectory.path);
-  });
+  const setWorkingDirectory = useStore(state => state.setWorkingDirectory)
+  const workingDirectory = useStore(state => state.workingDirectory)
+  const closeAllFiles = useStore(state => state.closeAllFiles)
+  const openFile = useStore(state => state.openFile)
 
   // encapsulate file creation and confirmation pop up and directories into parent componnent.
   return (
     <>
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
         <TopBar 
-          directory={currentDirectory.path}
+          directory={workingDirectory || APPLICATION_PATH}
           onBack={() => {
-            setCurrentDirectory({
-              path: StepBackPath({path: currentDirectory.path}),
-              isDirectory: true
-            })
+            setWorkingDirectory(StepBackPath({path: workingDirectory}))
           }}
         />  
         <FileManager
           deletePath={deletePath}
-          fileListings={fileListings}
           fileCreationMode={fileCreationMode}
           fileCreationKey={fileCreationKey}
-          fetchedData={fetchedData}
           onDelete={path => setDeletePath(path)}
-          onOpen={async fileType => { // fileType is a type that tells the program wether the file is a directory or file
-            !fileType.isDirectory && CloseAllFiles()
-            fileType.isDirectory && setCurrentDirectory(fileType)
-            Open(fileType)
+          onOpen={fileType => {
+            if (fileType.isDirectory) {
+              setWorkingDirectory(fileType.path)
+            } else {
+              closeAllFiles()
+              openFile(fileType.path)
+            }
           }}
           onConfirm={() => {
-            deletePath && DeleteFileByFullPath({ path: deletePath });
-            fetchedData(currentDirectory.path);
+            deletePath && deleteFile({ path: deletePath });
             setDeletePath(undefined);
           }}
           onCancel={() => setDeletePath(undefined)}
         />
         <div className="mt-auto">
           <BottomBar
-            navigate={navigate}
             onFileClick={() => 
               updateFileCreation(FILE_CREATION_MODE.FILE)}
             onFolderClick={() =>

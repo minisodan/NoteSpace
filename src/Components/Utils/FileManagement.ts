@@ -2,16 +2,20 @@ import { invoke } from "@tauri-apps/api/core";
 import { homeDir, join } from "@tauri-apps/api/path";
 import { platform } from "@tauri-apps/plugin-os";
 import { extname } from "@tauri-apps/api/path";
-import { Open } from "../Utils/Store";
 import { FileType } from "../Types/FileType";
+
+/**
+ * Helper function to create the base level application path as a string.
+ * 
+ * @returns returns a joined string that is the applications path
+ */
+export const APPLICATION_PATH = await join(await homeDir(), ".notespace");
 
 /**
  * Helper function to that creates the base application.
  */
-export const CreateApplicationDirectory = async () => {
-  let path = await GetApplicationPath();
-
-  CreateDirectory({path: path});
+export const createApplicationDirectory = async () => {
+  createDirectory({path: APPLICATION_PATH});
 }
 
 /**
@@ -20,7 +24,7 @@ export const CreateApplicationDirectory = async () => {
  * @param content Content of the file to be saved
  * @param path The path of the given file to be saved
  */
-export const SaveFile = ({
+export const saveFile = ({
   content,
   path,
 }: {
@@ -29,24 +33,12 @@ export const SaveFile = ({
 }) => invoke("save_file", { content: content, path: path });
 
 /**
- * Initalizes the cache to the application directory
- */
-export const InitilizeFiles = async () => {
-  const fileType = {
-    path: await GetApplicationPath(),
-    isDirectory: true
-  } as FileType;
-
-  Open(fileType)
-}
-
-/**
  * Creates a file with absolute path.
  * 
  * @param path Absolute path to create file. 
  * @returns A promise resolving or rejecting to the backend response.
  */
-export const CreateFile = async ({ path }: { path: string }) => {
+export const createFile = async ({ path }: { path: string }) => {
   return invoke("create_file", { path: path });
 };
 
@@ -56,7 +48,7 @@ export const CreateFile = async ({ path }: { path: string }) => {
  * @param path Absolute path to create file. 
  * @returns A promise resolving or rejecting to the backend response. 
  */
-export const CreateDirectory = async ({ path }: { path: string }) =>
+export const createDirectory = async ({ path }: { path: string }) =>
   invoke("create_directory", { path: path });
 
 /**
@@ -65,7 +57,7 @@ export const CreateDirectory = async ({ path }: { path: string }) =>
  * @param path pased in path to be deleted
  * @returns deletes the file based on path
  */
-export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
+export const deleteFile = async ({ path }: { path: string }) => {
   return invoke("delete_file", { path: path });
 }
 
@@ -75,8 +67,8 @@ export const DeleteFileByFullPath = async ({ path }: { path: string }) => {
  * @param path current path with files and directories.
  * @returns a list files and directories as FileType.
  */
-export const FetchAllFilesAndDirectories = async ({ path }: { path: string }) => {
-  return invoke("list_files", { path: path ?? await GetApplicationPath() }) as Promise<FileType[]>;
+export const fetchAllFilesAndDirectories = async ({ path }: { path: string }) => {
+  return invoke("list_files", { path: path ?? APPLICATION_PATH }) as Promise<FileType[]>;
 }
 
 /**
@@ -85,8 +77,8 @@ export const FetchAllFilesAndDirectories = async ({ path }: { path: string }) =>
  * @param path path to the file.
  * @returns file contents.
  */
-export const ReadTextFileByFullPath = async ({ path }: { path: string }) => {
-  if (await CheckExtenionFromPath({ path: path })) {
+export const readTextFile = async ({ path }: { path: string }) => {
+  if (await checkExtenionFromPath({ path: path })) {
     return invoke("read_file", { path: path });
   } else {
     return Promise.reject("File has incorrect extention");
@@ -94,20 +86,12 @@ export const ReadTextFileByFullPath = async ({ path }: { path: string }) => {
 };
 
 /**
- * Helper function to create the base level application path as a string.
- * 
- * @returns returns a joined string that is the applications path
- */
-export const GetApplicationPath = async () =>
-  await join(await homeDir(), ".notespace");
-
-/**
  * Strips the name from the path 
  * 
  * @param path the path to be stripped
  * @returns The stripped name from the path 
  */
-export const StripFileNameFromPath = ({ path }: { path: string }) => {
+export const stripFileNameFromPath = ({ path }: { path: string }) => {
   // for a given path, remove everything other than the final path and extension
   let fileName = path.substring(
     (platform() === "windows"
@@ -119,7 +103,7 @@ export const StripFileNameFromPath = ({ path }: { path: string }) => {
   // if the fileName has an extension, remove it.
   return fileName.substring(
     0,
-    fileName.includes(".") ? fileName.indexOf(".") : fileName.length
+    fileName.includes(".") && fileName.charAt(0) !== '.' ? fileName.indexOf(".") : fileName.length
   );
 };
 
@@ -143,10 +127,10 @@ export const StepBackPath = ({ path }: { path: string }) => {
  * @param path path of file to fetch content from
  * @returns true if the file extention is valid, false otherwise.
  */
-export const CheckExtenionFromPath = async ({ path }: { path: string }): Promise<boolean> => {
+export const checkExtenionFromPath = async ({ path }: { path: string }): Promise<boolean> => {
   const pathExtention = await extname(path);
 
-  pathExtention ?? CheckValidFileExtention({ extention: pathExtention });
+  pathExtention ?? checkValidFileExtention({ extention: pathExtention });
   return false;
 };
 
@@ -159,5 +143,5 @@ export const CheckExtenionFromPath = async ({ path }: { path: string }): Promise
  * @param extention Extention as a string
  * @returns true if valid,otherwise false.
  */
-const CheckValidFileExtention = ({ extention }: { extention: string }) =>
+const checkValidFileExtention = ({ extention }: { extention: string }) =>
   ["txt", "md"].includes(extention);
