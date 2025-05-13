@@ -5,9 +5,7 @@ import { extname } from "@tauri-apps/api/path";
 import { FileType } from "../Types/FileType";
 
 /**
- * Helper function to create the base level application path as a string.
- * 
- * @returns returns a joined string that is the applications path
+ * A reference to the base level directory of the application.
  */
 export const APPLICATION_PATH = await join(await homeDir(), ".notespace");
 
@@ -107,14 +105,17 @@ export const stripFileNameFromPath = ({ path }: { path: string }) => {
   );
 };
 
+/**
+ * Given a string path, this will return a string that 
+ * is one directory backwards.
+ * 
+ * @param path the path to be backed up
+ * @returns the new path
+ */
 export const StepBackPath = ({ path }: { path: string }) => {
   let indexOfLastSlash = platform() === "windows"
       ? path.lastIndexOf("\\")
       : path.lastIndexOf("/") + 1
-  console.log(path, path.substring(
-    0,
-    indexOfLastSlash - 1
-  ), indexOfLastSlash, path.length)
   return path.substring(
     0,
     indexOfLastSlash - 1

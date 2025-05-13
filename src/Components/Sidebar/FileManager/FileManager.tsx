@@ -34,7 +34,12 @@ const FileManager = ({
         />
       )}
     </div>
-    <ConfirmDialog deletePath={deletePath} onConfirm={onConfirm} onCancel={onCancel}/>
+    <ConfirmDialog 
+      deletePath={deletePath} 
+      onConfirm={() => {
+        if (onConfirm) onConfirm()
+      }} 
+      onCancel={onCancel}/>
     <div className="flex-grow overflow-y-auto">
       <FileListings onOpen={onOpen} onDelete={onDelete}/>
     </div>

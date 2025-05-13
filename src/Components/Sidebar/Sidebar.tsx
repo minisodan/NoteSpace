@@ -53,8 +53,9 @@ const Sidebar = () => {
         <div className="mt-auto">
           <BottomBar
             onFileClick={() => 
-              updateFileCreation(FILE_CREATION_MODE.FILE)}
-            onFolderClick={() =>
+              updateFileCreation(FILE_CREATION_MODE.FILE)
+            }
+            onFolderClick={() => 
               updateFileCreation(FILE_CREATION_MODE.DIRECTORY)
             }
           />
