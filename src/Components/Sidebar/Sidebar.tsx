@@ -1,9 +1,10 @@
 import { FILE_CREATION_MODE, FileCreationMode } from "../Types/FileCreation";
-import { deleteFile } from "../Utils/FileManagement";
+import { APPLICATION_PATH, deleteFile, StepBackPath } from "../Utils/FileManagement";
 import { useState } from "react";
 import FileManager from "./FileManager/FileManager";
 import { useStore } from "../Utils/Store";
 import BottomBar from "./BottomBar/BottomBar";
+import TopBar from "./TopBar/TopBar";
 
 const Sidebar = () => {
   const [fileCreationMode, setFileCreationMode] = useState<FileCreationMode | undefined>(undefined);
@@ -16,6 +17,7 @@ const Sidebar = () => {
   };
 
   const setWorkingDirectory = useStore(state => state.setWorkingDirectory)
+  const workingDirectory = useStore(state => state.workingDirectory)
   const closeAllFiles = useStore(state => state.closeAllFiles)
   const openFile = useStore(state => state.openFile)
 
@@ -23,6 +25,12 @@ const Sidebar = () => {
   return (
     <>
       <div className="h-screen w-52 bg-neutral-800 text-white flex flex-col hide-scrollbar">
+        <TopBar 
+          directory={workingDirectory || APPLICATION_PATH}
+          onBack={() => {
+            setWorkingDirectory(StepBackPath({path: workingDirectory}))
+          }}
+        />  
         <FileManager
           deletePath={deletePath}
           fileCreationMode={fileCreationMode}
@@ -45,8 +53,9 @@ const Sidebar = () => {
         <div className="mt-auto">
           <BottomBar
             onFileClick={() => 
-              updateFileCreation(FILE_CREATION_MODE.FILE)}
-            onFolderClick={() =>
+              updateFileCreation(FILE_CREATION_MODE.FILE)
+            }
+            onFolderClick={() => 
               updateFileCreation(FILE_CREATION_MODE.DIRECTORY)
             }
           />
