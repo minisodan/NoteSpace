@@ -114,7 +114,7 @@ export const stripFileNameFromPath = ({ path }: { path: string }) => {
  */
 export const StepBackPath = ({ path }: { path: string }) => {
   let indexOfLastSlash = platform() === "windows"
-      ? path.lastIndexOf("\\")
+      ? path.lastIndexOf("\\") + 1
       : path.lastIndexOf("/") + 1
   return path.substring(
     0,
