@@ -13,6 +13,7 @@ const FileManager = ({
   fileCreationKey,
   onDelete,
   onConfirm,
+  onComplete,
   onOpen,
   onCancel
 }: {
@@ -31,6 +32,7 @@ const FileManager = ({
         <FileCreation
           key={fileCreationKey}
           fileCreationMode={fileCreationMode ?? FILE_CREATION_MODE.FILE}
+          onComplete={fullPath => onComplete ? onComplete(fullPath) : {}}
         />
       )}
     </div>

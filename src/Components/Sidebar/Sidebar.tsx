@@ -49,6 +49,9 @@ const Sidebar = () => {
             setDeletePath(undefined);
           }}
           onCancel={() => setDeletePath(undefined)}
+          onComplete={fullPath => {
+            setWorkingDirectory(fullPath)
+          }}
         />
         <div className="mt-auto">
           <BottomBar
