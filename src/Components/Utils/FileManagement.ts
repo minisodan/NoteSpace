@@ -76,11 +76,7 @@ export const fetchAllFilesAndDirectories = async ({ path }: { path: string }) =>
  * @returns file contents.
  */
 export const readTextFile = async ({ path }: { path: string }) => {
-  if (await checkExtenionFromPath({ path: path })) {
-    return invoke("read_file", { path: path });
-  } else {
-    return Promise.reject("File has incorrect extention");
-  }
+  return invoke("read_file", { path: path }) as Promise<string>;
 };
 
 /**
@@ -121,28 +117,3 @@ export const StepBackPath = ({ path }: { path: string }) => {
     indexOfLastSlash - 1
   );
 }
-
-/**
- * Fucntion fetch extention from path and pass to a validator
- *
- * @param path path of file to fetch content from
- * @returns true if the file extention is valid, false otherwise.
- */
-export const checkExtenionFromPath = async ({ path }: { path: string }): Promise<boolean> => {
-  const pathExtention = await extname(path);
-
-  pathExtention ?? checkValidFileExtention({ extention: pathExtention });
-  return false;
-};
-
-/**
- * Helper function that validates a file extention against the following allowed extensions:
- *
- * - `.txt`
- * - `.md`
- *
- * @param extention Extention as a string
- * @returns true if valid,otherwise false.
- */
-const checkValidFileExtention = ({ extention }: { extention: string }) =>
-  ["txt", "md"].includes(extention);
